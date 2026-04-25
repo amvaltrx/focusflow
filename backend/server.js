@@ -38,15 +38,20 @@ const startServer = async () => {
         console.log('Automatically spinning up a portable internal database for you...');
 
         try {
-            const { MongoMemoryServer } = require('mongodb-memory-server');
+            // Skip memory server on Netlify
+            if (process.env.NETLIFY) {
+                console.log('Running on Netlify: Fallback database disabled.');
+                return;
+            }
+
+            // Use a dynamic require to hide this from the Netlify bundler
+            const { MongoMemoryServer } = require('mongodb-memory' + '-server');
             const mongod = await MongoMemoryServer.create();
             mongoUri = mongod.getUri();
             await mongoose.connect(mongoUri);
             console.log('Portable InMemory Database firmly hooked into the server!');
 
-            // Seed the DB so your bypass login instantly works
             const User = require('./src/models/User');
-            // Check if user exists just to be safe
             const bcrypt = require('bcryptjs');
             const salt = await bcrypt.genSalt(10);
             const hashedPassword = await bcrypt.hash('00000', salt);
@@ -56,7 +61,6 @@ const startServer = async () => {
                 await User.create({ username: 'amvaltrx', password: hashedPassword });
                 console.log('Solo account amvaltrx created successfully!');
             } else {
-                // Ensure password is reset to the requested one
                 u.password = hashedPassword;
                 await u.save();
                 console.log('Solo account amvaltrx password synchronized!');
