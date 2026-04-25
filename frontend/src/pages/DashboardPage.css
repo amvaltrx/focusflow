@@ -1,0 +1,370 @@
+.dashboard {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 1.5rem;
+}
+.stat-card {
+  padding: 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 1.2rem;
+}
+.stat-icon {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.stat-icon.flame { background: rgba(245, 158, 11, 0.15); color: var(--warning); }
+.stat-icon.complete { background: rgba(16, 185, 129, 0.15); color: var(--success); }
+.stat-icon.pending { background: rgba(239, 68, 68, 0.15); color: var(--accent-primary); }
+.stat-icon.time { background: rgba(153, 27, 27, 0.15); color: var(--accent-secondary); }
+
+.stat-info p {
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  margin-bottom: 0.2rem;
+}
+.stat-info h3 {
+  font-size: 1.6rem;
+  color: var(--text-primary);
+}
+.grid-2 {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 1.5rem;
+}
+.chart-container, .progress-container {
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+}
+.chart-container h3, .progress-container h3 {
+  margin-bottom: 1.5rem;
+  font-size: 1.1rem;
+}
+.chart-wrapper {
+  flex: 1;
+  min-height: 250px;
+}
+
+/* Circular Progress */
+.circular-progress {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 1.5rem;
+}
+.circular-chart {
+  display: block;
+  margin: 0 auto;
+  max-width: 80%;
+  max-height: 200px;
+}
+.circle-bg {
+  fill: none;
+  stroke: var(--glass-border);
+  stroke-width: 3.8;
+}
+.circle {
+  fill: none;
+  stroke: var(--accent-primary);
+  stroke-width: 2.8;
+  stroke-linecap: round;
+  transition: stroke-dasharray 1s ease-out;
+}
+.percentage {
+  fill: var(--text-primary);
+  font-family: var(--font-heading);
+  font-size: 0.6em;
+  font-weight: 700;
+  text-anchor: middle;
+}
+.progress-text {
+  text-align: center;
+  color: var(--text-secondary);
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+@media (max-width: 1024px) {
+  .grid-2 {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Procrastination Insights */
+.procrastination-insights {
+    margin-top: 2rem;
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.2rem;
+    border-left: 4px solid var(--warning);
+}
+.insights-header {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+}
+.insights-header h3 {
+    font-size: 1.2rem;
+    margin: 0;
+}
+.insights-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+.insight-item {
+    display: flex;
+    gap: 1rem;
+    align-items: flex-start;
+}
+.insight-item p {
+    font-size: 0.95rem;
+    line-height: 1.5;
+    margin: 0;
+}
+.flagged-tasks {
+    margin-top: 1rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--glass-border);
+}
+.flagged-tasks h4 {
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    margin-bottom: 1rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+.flagged-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+}
+.flagged-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.8rem 1rem;
+    background: rgba(239, 68, 68, 0.05);
+    border-radius: var(--border-radius-md);
+    border: 1px solid rgba(239, 68, 68, 0.1);
+}
+.badge-danger {
+    background: var(--danger);
+    color: white;
+    font-size: 0.7rem;
+    padding: 0.2rem 0.6rem;
+    border-radius: 20px;
+    font-weight: 600;
+}
+
+/* Wellness Correlation */
+.wellness-correlation {
+    margin-top: 2rem;
+    padding: 1.5rem;
+    border-left: 4px solid var(--accent-primary);
+}
+.wellness-content {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+.pattern-text {
+    font-size: 1.1rem;
+    font-weight: 500;
+    font-style: italic;
+    color: var(--text-primary);
+}
+.wellness-stats-row {
+    display: flex;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+}
+.wellness-mini-card {
+    background: var(--bg-primary);
+    padding: 0.8rem 1.2rem;
+    border-radius: var(--border-radius-md);
+    border: 1px solid var(--glass-border);
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+}
+.wellness-mini-card .label {
+    font-size: 0.7rem;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+}
+.wellness-mini-card .value {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--accent-primary);
+}
+
+/* Consistency Engine */
+.consistency-engine {
+    margin-top: 2rem;
+    padding: 1.5rem;
+}
+.consistency-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1.5rem;
+    margin-top: 1.5rem;
+}
+.streak-card {
+    background: var(--bg-primary);
+    padding: 1.2rem;
+    border-radius: var(--border-radius-lg);
+    border: 1px solid var(--glass-border);
+    display: flex;
+    align-items: center;
+    gap: 1.2rem;
+    transition: transform 0.2s ease;
+}
+.streak-card:hover {
+    transform: translateY(-5px);
+    border-color: var(--accent-primary);
+}
+.streak-icon {
+    width: 50px;
+    height: 50px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.streak-icon.on-time { background: rgba(16, 185, 129, 0.1); color: var(--success); }
+.streak-icon.deep-work { background: rgba(99, 102, 241, 0.1); color: #6366f1; }
+.streak-icon.no-delay { background: rgba(245, 158, 11, 0.1); color: var(--warning); }
+
+.streak-info {
+    display: flex;
+    flex-direction: column;
+}
+.streak-value {
+    font-size: 1.4rem;
+    font-weight: 800;
+    color: var(--text-primary);
+}
+.streak-label {
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* Burnout & Health Styles */
+.dashboard-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+}
+.health-status-badge {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    padding: 0.6rem 1.2rem;
+    border-radius: 50px;
+    font-size: 0.85rem;
+    font-weight: 600;
+}
+.health-status-badge.low { background: rgba(16, 185, 129, 0.1); color: var(--success); }
+.health-status-badge.medium { background: rgba(245, 158, 11, 0.1); color: var(--warning); }
+.health-status-badge.high { background: rgba(239, 68, 68, 0.1); color: var(--danger); }
+
+.burnout-alert {
+    margin-bottom: 2rem;
+    padding: 1.5rem;
+    border-left: 5px solid;
+}
+.burnout-alert.medium { border-color: var(--warning); }
+.burnout-alert.high { border-color: var(--danger); }
+
+.alert-header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+.alert-header h4 { margin: 0; font-size: 1.2rem; }
+.alert-header p { margin: 0; font-size: 0.9rem; color: var(--text-secondary); }
+
+.alert-content {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+}
+.warning-section h5, .suggestion-section h5 {
+    margin-bottom: 0.8rem;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    color: var(--text-secondary);
+}
+.alert-content ul {
+    margin: 0;
+    padding-left: 1.2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+.alert-content li { font-size: 0.95rem; }
+
+@media (max-width: 768px) {
+    .alert-content { grid-template-columns: 1fr; }
+}
+
+/* Goal Alignment Tracking */
+.goal-alignment {
+    margin-top: 2rem;
+    padding: 1.5rem;
+}
+.alignment-stat {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+    margin-top: 1.5rem;
+}
+.alignment-ring {
+    width: 100px;
+    height: 100px;
+}
+.circular-chart.small {
+    max-width: 100px;
+}
+.alignment-info {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+.alignment-insight {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin: 0;
+}
+.alignment-detail {
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+}
+
+/* Common Badge */
+.goal-badge {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.2rem 0.6rem;
+    border-radius: 4px;
+    border: 1px solid;
+    font-size: 0.75rem;
+    font-weight: 600;
+    white-space: nowrap;
+}
