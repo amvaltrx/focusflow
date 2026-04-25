@@ -49,7 +49,7 @@ const startServer = async () => {
             // Check if user exists just to be safe
             const bcrypt = require('bcryptjs');
             const salt = await bcrypt.genSalt(10);
-            const hashedPassword = await bcrypt.hash('(00000)', salt);
+            const hashedPassword = await bcrypt.hash('00000', salt);
 
             let u = await User.findOne({ username: 'amvaltrx' });
             if(!u) {
