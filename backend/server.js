@@ -20,6 +20,17 @@ app.use('/api/stats', statsRoutes);
 app.use('/api/logs', logRoutes);
 app.use('/api/goals', goalRoutes);
 
+// Health Check Endpoint
+app.get('/api/health', async (req, res) => {
+  const status = mongoose.connection.readyState;
+  const states = ['disconnected', 'connected', 'connecting', 'disconnecting'];
+  res.json({ 
+    status: states[status], 
+    database: mongoose.connection.name,
+    environment: process.env.NETLIFY ? 'netlify' : 'local'
+  });
+});
+
 const path = require('path');
 app.use(express.static(path.join(__dirname, '../frontend/dist')));
 app.use((req, res) => {
