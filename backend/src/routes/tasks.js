@@ -17,9 +17,9 @@ router.get('/', auth, async (req, res) => {
 // Create a task
 router.post('/', auth, async (req, res) => {
   try {
-    const { title, description, allocatedTime, priority, category, deadline, subtasks } = req.body;
+    const { title, description, allocatedTime, isAllDay, priority, category, deadline, subtasks } = req.body;
     const newTask = new Task({
-      userId: req.user.id, title, description, allocatedTime, priority, category, deadline, subtasks
+      userId: req.user.id, title, description, allocatedTime, isAllDay, priority, category, deadline, subtasks
     });
     const task = await newTask.save();
     res.json(task);
@@ -31,12 +31,12 @@ router.post('/', auth, async (req, res) => {
 // Update a task
 router.put('/:id', auth, async (req, res) => {
   try {
-    const { title, description, allocatedTime, actualTimeSpent, priority, category, deadline, subtasks } = req.body;
+    const { title, description, allocatedTime, isAllDay, actualTimeSpent, priority, category, deadline, subtasks } = req.body;
     let task = await Task.findById(req.params.id);
     if (!task) return res.status(404).json({ message: 'Task not found' });
     if (task.userId.toString() !== req.user.id) return res.status(401).json({ message: 'Not authorized' });
     
-    const updateData = { title, description, allocatedTime, actualTimeSpent, priority, category, deadline, subtasks };
+    const updateData = { title, description, allocatedTime, isAllDay, actualTimeSpent, priority, category, deadline, subtasks };
     // Remove undefined fields so they don't overwrite if not provided
     Object.keys(updateData).forEach(key => updateData[key] === undefined && delete updateData[key]);
 

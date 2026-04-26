@@ -26,6 +26,10 @@ const TaskSchema = new mongoose.Schema({
     type: Number,
     default: 25
   },
+  isAllDay: {
+    type: Boolean,
+    default: false
+  },
   actualTimeSpent: {
     type: Number,
     default: 0

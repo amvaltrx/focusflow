@@ -16,6 +16,7 @@ const TasksPage = () => {
     title: '',
     description: '',
     allocatedTime: 25,
+    isAllDay: false,
     priority: 'medium',
     category: 'Work',
     deadline: '',
@@ -98,7 +99,7 @@ const TasksPage = () => {
 
   const openAddModal = () => {
     setEditingTaskId(null);
-    setFormData({ title: '', description: '', allocatedTime: 25, priority: 'medium', category: 'Work', deadline: '', goalId: '' });
+    setFormData({ title: '', description: '', allocatedTime: 25, isAllDay: false, priority: 'medium', category: 'Work', deadline: '', goalId: '' });
     setIsModalOpen(true);
   };
 
@@ -108,6 +109,7 @@ const TasksPage = () => {
       title: task.title || '',
       description: task.description || '',
       allocatedTime: task.allocatedTime || 25,
+      isAllDay: task.isAllDay || false,
       priority: task.priority || 'medium',
       category: task.category || 'Work',
       deadline: task.deadline ? new Date(task.deadline).toISOString().split('T')[0] : '',
@@ -122,7 +124,8 @@ const TasksPage = () => {
   };
 
   const handleFormChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    const value = e.target.type === 'checkbox' ? e.target.checked : e.target.value;
+    setFormData({ ...formData, [e.target.name]: value });
   };
 
   const handleSaveTask = async (e) => {
@@ -462,7 +465,11 @@ const TasksPage = () => {
                             <div className="task-meta">
                                 <span className={`priority-badge ${task.priority}`}>{task.priority}</span>
                                 <span className="category-badge">{task.category}</span>
-                                {task.allocatedTime && <span className="deadline-badge">{task.allocatedTime}m Focus</span>}
+                                {task.isAllDay ? (
+                                    <span className="all-day-badge">All Day</span>
+                                ) : (
+                                    task.allocatedTime && <span className="deadline-badge">{task.allocatedTime}m Focus</span>
+                                )}
                                 {task.deadline && <span className="deadline-badge">Due: {new Date(task.deadline).toLocaleDateString()}</span>}
                                 {task.goalId && goals.find(g => g._id === task.goalId) && (
                                     <span className="goal-badge" style={{ 
@@ -546,10 +553,18 @@ const TasksPage = () => {
                 <textarea name="description" className="input-field" rows="2" value={formData.description} onChange={handleFormChange}></textarea>
               </div>
               <div className="form-row">
-                  <div className="form-group">
-                    <label>Time (Mins)</label>
-                    <input type="number" min="1" max="1440" name="allocatedTime" className="input-field" value={formData.allocatedTime} onChange={handleFormChange} />
+                  <div className="form-group checkbox-group">
+                    <label className="checkbox-label">
+                        <input type="checkbox" name="isAllDay" checked={formData.isAllDay} onChange={handleFormChange} />
+                        Applicable Whole Day
+                    </label>
                   </div>
+                  {!formData.isAllDay && (
+                      <div className="form-group">
+                        <label>Time (Mins)</label>
+                        <input type="number" min="1" max="1440" name="allocatedTime" className="input-field" value={formData.allocatedTime} onChange={handleFormChange} />
+                      </div>
+                  )}
                   <div className="form-group">
                     <label>Priority</label>
                     <select name="priority" className="input-field" value={formData.priority} onChange={handleFormChange}>
