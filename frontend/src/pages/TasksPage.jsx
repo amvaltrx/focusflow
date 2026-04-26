@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef, useMemo } from 'react';
 import { DragDropContext, Droppable, Draggable } from '@hello-pangea/dnd';
-import { Plus, GripVertical, Check, Trash2, Edit3, X, Play, Pause, Square, Search, Filter, Sparkles, Target, Calendar, Timer, Clock } from 'lucide-react';
+import { Plus, GripVertical, Check, Trash2, Edit3, X, Play, Pause, Square, Search, Filter, Sparkles, Target, Calendar, Timer, Clock, Minus } from 'lucide-react';
 import api from '../services/api';
 import './TasksPage.css';
 
@@ -43,6 +43,7 @@ const TasksPage = () => {
   const [smartPlan, setSmartPlan] = useState(null);
   const [showSmartPlan, setShowSmartPlan] = useState(false);
   const [isMicroMode, setIsMicroMode] = useState(false);
+  const [isMinimized, setIsMinimized] = useState(false);
 
   const fetchTasks = async () => {
     try {
@@ -183,6 +184,7 @@ const TasksPage = () => {
       setSessionSeconds(0);
       setSessionStartTime(new Date());
       setIsTimerRunning(true);
+      setIsMinimized(false);
   };
 
   const postponeTask = async (id) => {
@@ -225,6 +227,7 @@ const TasksPage = () => {
       setSessionSeconds(0);
       setSessionStartTime(null);
       setIsMicroMode(false);
+      setIsMinimized(false);
       clearInterval(timerRef.current);
   };
 
@@ -606,8 +609,11 @@ const TasksPage = () => {
         </div>
       )}
 
-      {activeFocusTask && (
+      {activeFocusTask && !isMinimized && (
           <div className="focus-overlay animate-fade-in">
+              <button className="btn-minimize" onClick={() => setIsMinimized(true)} title="Minimize to Corner">
+                  <Minus size={20} />
+              </button>
               <div className="focus-content">
                   <p className="focus-category">{activeFocusTask.category} {isMicroMode && <span className="micro-tag">• Micro-Deadline</span>}</p>
                   <h1 className="focus-title">{activeFocusTask.title}</h1>
@@ -633,6 +639,23 @@ const TasksPage = () => {
                           <Square size={24}/> Quit
                       </button>
                   </div>
+              </div>
+          </div>
+      )}
+
+      {activeFocusTask && isMinimized && (
+          <div className="mini-timer glass-panel animate-slide-up" onClick={() => setIsMinimized(false)}>
+              <div className="mini-timer-info">
+                  <span className="mini-timer-title">{activeFocusTask.title}</span>
+                  <span className="mini-timer-clock">{formatTime(timeLeft)}</span>
+              </div>
+              <div className="mini-timer-controls" onClick={(e) => e.stopPropagation()}>
+                  <button className="mini-btn" onClick={toggleTimer}>
+                      {isTimerRunning ? <Pause size={14}/> : <Play size={14} fill="currentColor"/>}
+                  </button>
+                  <button className="mini-btn text-danger" onClick={endFocusTimer}>
+                      <Square size={14}/>
+                  </button>
               </div>
           </div>
       )}
