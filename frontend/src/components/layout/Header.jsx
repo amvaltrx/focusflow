@@ -22,7 +22,8 @@ const Header = () => {
     const granted = await NotificationService.requestPermission();
     setNotificationsEnabled(granted);
     if (granted) {
-        NotificationService.sendNotification("Notifications Active! ✅", "We'll remind you about pending work every 2 hours.");
+        await NotificationService.registerServiceWorkerAndSubscribe(api);
+        NotificationService.sendNotification("Mobile Push Active! 📱", "You can now receive reminders even when the app is closed.");
         NotificationService.startReminders(api);
     }
   };

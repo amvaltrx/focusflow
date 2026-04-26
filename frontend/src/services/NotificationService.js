@@ -1,49 +1,66 @@
+const PUBLIC_VAPID_KEY = 'BER7NJE-OS3jqXP5Qe70nQxAi-yd0jd92Zq4NN1ATLiHa7K6zpCuelk_EZYkEPCsC9Y61J6JL2Fyh_QXMKaOAQ4';
+
 class NotificationService {
     constructor() {
         this.reminderInterval = null;
     }
 
     async requestPermission() {
-        if (!('Notification' in window)) {
-            console.log("This browser does not support notifications.");
-            return false;
-        }
-
+        if (!('Notification' in window)) return false;
         if (Notification.permission === 'granted') return true;
-
         const permission = await Notification.requestPermission();
         return permission === 'granted';
     }
 
+    async registerServiceWorkerAndSubscribe(api) {
+        if (!('serviceWorker' in navigator)) return;
+
+        try {
+            const register = await navigator.serviceWorker.register('/sw.js', {
+                scope: '/'
+            });
+
+            const subscription = await register.pushManager.subscribe({
+                userVisibleOnly: true,
+                applicationServerKey: this.urlBase64ToUint8Array(PUBLIC_VAPID_KEY)
+            });
+
+            await api.post('/notifications/subscribe', subscription);
+            console.log("Push subscription successful");
+        } catch (err) {
+            console.error("Service Worker / Push subscription failed:", err);
+        }
+    }
+
+    urlBase64ToUint8Array(base64String) {
+        const padding = '='.repeat((4 - base64String.length % 4) % 4);
+        const base64 = (base64String + padding).replace(/\-/g, '+').replace(/_/g, '/');
+        const rawData = window.atob(base64);
+        const outputArray = new Uint8Array(rawData.length);
+        for (let i = 0; i < rawData.length; ++i) {
+            outputArray[i] = rawData.charCodeAt(i);
+        }
+        return outputArray;
+    }
+
     sendNotification(title, body) {
         if (Notification.permission === 'granted') {
-            new Notification(title, {
-                body,
-                icon: '/logo192.png' // Or any app icon
-            });
+            new Notification(title, { body, icon: '/icon.png' });
         }
     }
 
     startReminders(api) {
         if (this.reminderInterval) return;
-
-        // Check every 2 hours (7200000 ms)
-        // For testing, I can set it shorter if needed, but 2h is the request.
         const INTERVAL_TIME = 2 * 60 * 60 * 1000;
-
         this.reminderInterval = setInterval(async () => {
             try {
                 const res = await api.get('/tasks');
                 const pendingCount = res.data.filter(t => t.status === 'pending').length;
-
                 if (pendingCount > 0) {
-                    this.sendNotification(
-                        "FocusFlow Reminder 🎯",
-                        `You still have ${pendingCount} tasks pending. Ready to get back into focus?`
-                    );
+                    this.sendNotification("FocusFlow Reminder 🎯", `You have ${pendingCount} tasks pending.`);
                 }
             } catch (err) {
-                console.error("Failed to check tasks for notification:", err);
+                console.error("Reminder check failed:", err);
             }
         }, INTERVAL_TIME);
     }

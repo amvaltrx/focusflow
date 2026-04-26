@@ -3,6 +3,20 @@ const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
 
+const webpush = require('web-push');
+
+const publicVapidKey = 'BER7NJE-OS3jqXP5Qe70nQxAi-yd0jd92Zq4NN1ATLiHa7K6zpCuelk_EZYkEPCsC9Y61J6JL2Fyh_QXMKaOAQ4';
+const privateVapidKey = '_QLrTvxzWGQsUk5Ii3G1GOBUNkl71gzJupGVQ8bRRTw';
+
+webpush.setVapidDetails(
+  'mailto:test@test.com',
+  publicVapidKey,
+  privateVapidKey
+);
+
+// In-memory subscription store (Use a DB in production if needed)
+let subscriptions = [];
+
 const authRoutes = require('./src/routes/auth');
 const taskRoutes = require('./src/routes/tasks');
 const statsRoutes = require('./src/routes/stats');
@@ -30,6 +44,19 @@ app.get('/api/health', async (req, res) => {
     environment: process.env.NETLIFY ? 'netlify' : 'local'
   });
 });
+
+app.post('/api/notifications/subscribe', (req, res) => {
+    const subscription = req.body;
+    subscriptions.push(subscription);
+    res.status(201).json({});
+});
+
+const sendPushNotification = (title, body) => {
+    const payload = JSON.stringify({ title, body });
+    subscriptions.forEach(sub => {
+        webpush.sendNotification(sub, payload).catch(err => console.error("Push failed:", err));
+    });
+};
 
 const path = require('path');
 app.use(express.static(path.join(__dirname, '../frontend/dist')));
