@@ -2,12 +2,12 @@ import React, { useContext } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { ThemeProvider } from './context/ThemeContext';
 import { AuthProvider, AuthContext } from './context/AuthContext';
-import Sidebar from './components/layout/Sidebar';
-import Header from './components/layout/Header';
-import AuthPage from './pages/AuthPage';
-import DashboardPage from './pages/DashboardPage';
-import TasksPage from './pages/TasksPage';
-import GoalsPage from './pages/GoalsPage';
+import Sidebar from './components/layout/Sidebar.jsx';
+import Header from './components/layout/Header.jsx';
+import AuthPage from './pages/AuthPage.jsx';
+import DashboardPage from './pages/DashboardPage.jsx';
+import TasksPage from './pages/TasksPage.jsx';
+import GoalsPage from './pages/GoalsPage.jsx';
 
 const PrivateRoute = ({ children }) => {
   const { user, loading } = useContext(AuthContext);

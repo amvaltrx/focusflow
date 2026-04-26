@@ -457,139 +457,137 @@
     transform: translateY(-2px);
 }
 
- . a l l - d a y - b a d g e   { 
-         b a c k g r o u n d :   r g b a ( 1 6 8 ,   8 5 ,   2 4 7 ,   0 . 1 ) ; 
-         c o l o r :   # a 8 5 5 f 7 ; 
-         p a d d i n g :   0 . 2 r e m   0 . 6 r e m ; 
-         b o r d e r - r a d i u s :   2 0 p x ; 
-         f o n t - s i z e :   0 . 7 r e m ; 
-         f o n t - w e i g h t :   6 0 0 ; 
-         t e x t - t r a n s f o r m :   u p p e r c a s e ; 
-         b o r d e r :   1 p x   s o l i d   r g b a ( 1 6 8 ,   8 5 ,   2 4 7 ,   0 . 2 ) ; 
- } 
- 
- . c h e c k b o x - g r o u p   { 
-         d i s p l a y :   f l e x ; 
-         a l i g n - i t e m s :   c e n t e r ; 
-         m a r g i n - t o p :   1 . 5 r e m ; 
- } 
- 
- . c h e c k b o x - l a b e l   { 
-         d i s p l a y :   f l e x ; 
-         a l i g n - i t e m s :   c e n t e r ; 
-         g a p :   0 . 5 r e m ; 
-         c u r s o r :   p o i n t e r ; 
-         f o n t - s i z e :   0 . 9 r e m ; 
-         c o l o r :   v a r ( - - t e x t - p r i m a r y ) ; 
- } 
- 
- . c h e c k b o x - l a b e l   i n p u t [ t y p e = \  
- c h e c k b o x \ ]   { 
-         w i d t h :   1 8 p x ; 
-         h e i g h t :   1 8 p x ; 
-         a c c e n t - c o l o r :   v a r ( - - a c c e n t - p r i m a r y ) ; 
-         c u r s o r :   p o i n t e r ; 
- }  
- 
- . b t n - m i n i m i z e   { 
-         p o s i t i o n :   a b s o l u t e ; 
-         t o p :   2 r e m ; 
-         r i g h t :   6 r e m ; 
-         b a c k g r o u n d :   r g b a ( 2 5 5 ,   2 5 5 ,   2 5 5 ,   0 . 1 ) ; 
-         b o r d e r :   1 p x   s o l i d   r g b a ( 2 5 5 ,   2 5 5 ,   2 5 5 ,   0 . 2 ) ; 
-         c o l o r :   w h i t e ; 
-         p a d d i n g :   0 . 8 r e m ; 
-         b o r d e r - r a d i u s :   5 0 % ; 
-         c u r s o r :   p o i n t e r ; 
-         t r a n s i t i o n :   a l l   0 . 2 s ; 
-         d i s p l a y :   f l e x ; 
-         a l i g n - i t e m s :   c e n t e r ; 
-         j u s t i f y - c o n t e n t :   c e n t e r ; 
- } 
- 
- . b t n - m i n i m i z e : h o v e r   { 
-         b a c k g r o u n d :   r g b a ( 2 5 5 ,   2 5 5 ,   2 5 5 ,   0 . 2 ) ; 
-         t r a n s f o r m :   s c a l e ( 1 . 1 ) ; 
- } 
- 
- . m i n i - t i m e r   { 
-         p o s i t i o n :   f i x e d ; 
-         b o t t o m :   2 r e m ; 
-         r i g h t :   2 r e m ; 
-         w i d t h :   2 8 0 p x ; 
-         p a d d i n g :   1 r e m ; 
-         d i s p l a y :   f l e x ; 
-         a l i g n - i t e m s :   c e n t e r ; 
-         j u s t i f y - c o n t e n t :   s p a c e - b e t w e e n ; 
-         z - i n d e x :   1 0 0 0 0 ; 
-         c u r s o r :   p o i n t e r ; 
-         b o r d e r :   1 p x   s o l i d   v a r ( - - a c c e n t - p r i m a r y ) ; 
-         b a c k g r o u n d :   r g b a ( 1 5 ,   2 3 ,   4 2 ,   0 . 8 ) ; 
-         b a c k d r o p - f i l t e r :   b l u r ( 1 0 p x ) ; 
- } 
- 
- . m i n i - t i m e r : h o v e r   { 
-         t r a n s f o r m :   t r a n s l a t e Y ( - 5 p x ) ; 
-         b o x - s h a d o w :   0   1 0 p x   3 0 p x   r g b a ( 0 , 0 , 0 , 0 . 3 ) ; 
- } 
- 
- . m i n i - t i m e r - i n f o   { 
-         d i s p l a y :   f l e x ; 
-         f l e x - d i r e c t i o n :   c o l u m n ; 
-         g a p :   0 . 2 r e m ; 
-         m a x - w i d t h :   1 6 0 p x ; 
- } 
- 
- . m i n i - t i m e r - t i t l e   { 
-         f o n t - s i z e :   0 . 8 5 r e m ; 
-         f o n t - w e i g h t :   6 0 0 ; 
-         w h i t e - s p a c e :   n o w r a p ; 
-         o v e r f l o w :   h i d d e n ; 
-         t e x t - o v e r f l o w :   e l l i p s i s ; 
- } 
- 
- . m i n i - t i m e r - c l o c k   { 
-         f o n t - s i z e :   1 . 2 r e m ; 
-         f o n t - w e i g h t :   8 0 0 ; 
-         c o l o r :   v a r ( - - a c c e n t - p r i m a r y ) ; 
-         f o n t - v a r i a n t - n u m e r i c :   t a b u l a r - n u m s ; 
- } 
- 
- . m i n i - t i m e r - c o n t r o l s   { 
-         d i s p l a y :   f l e x ; 
-         g a p :   0 . 5 r e m ; 
- } 
- 
- . m i n i - b t n   { 
-         b a c k g r o u n d :   r g b a ( 2 5 5 ,   2 5 5 ,   2 5 5 ,   0 . 0 5 ) ; 
-         b o r d e r :   1 p x   s o l i d   r g b a ( 2 5 5 ,   2 5 5 ,   2 5 5 ,   0 . 1 ) ; 
-         c o l o r :   w h i t e ; 
-         p a d d i n g :   0 . 4 r e m ; 
-         b o r d e r - r a d i u s :   8 p x ; 
-         c u r s o r :   p o i n t e r ; 
-         d i s p l a y :   f l e x ; 
-         a l i g n - i t e m s :   c e n t e r ; 
-         j u s t i f y - c o n t e n t :   c e n t e r ; 
- } 
- 
- . m i n i - b t n : h o v e r   { 
-         b a c k g r o u n d :   r g b a ( 2 5 5 ,   2 5 5 ,   2 5 5 ,   0 . 1 ) ; 
- } 
- 
- . a n i m a t e - s l i d e - u p   { 
-         a n i m a t i o n :   s l i d e U p   0 . 4 s   c u b i c - b e z i e r ( 0 . 1 6 ,   1 ,   0 . 3 ,   1 ) ; 
- } 
- 
- @ k e y f r a m e s   s l i d e U p   { 
-         f r o m   {   t r a n s f o r m :   t r a n s l a t e Y ( 1 0 0 % )   s c a l e ( 0 . 9 ) ;   o p a c i t y :   0 ;   } 
-         t o   {   t r a n s f o r m :   t r a n s l a t e Y ( 0 )   s c a l e ( 1 ) ;   o p a c i t y :   1 ;   } 
- }  
- 
- . d a y - t a r g e t - i c o n   { 
-         p a d d i n g :   0 . 4 r e m ; 
-         d i s p l a y :   f l e x ; 
-         a l i g n - i t e m s :   c e n t e r ; 
-         j u s t i f y - c o n t e n t :   c e n t e r ; 
-         o p a c i t y :   0 . 8 ; 
- }  
- 
+.all-day-badge {
+    background: rgba(168, 85, 247, 0.1);
+    color: #a855f7;
+    padding: 0.2rem 0.6rem;
+    border-radius: 20px;
+    font-size: 0.7rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    border: 1px solid rgba(168, 85, 247, 0.2);
+}
+
+.checkbox-group {
+    display: flex;
+    align-items: center;
+    margin-top: 1.5rem;
+}
+
+.checkbox-label {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    cursor: pointer;
+    font-size: 0.9rem;
+    color: var(--text-primary);
+}
+
+.checkbox-label input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    accent-color: var(--accent-primary);
+    cursor: pointer;
+}
+
+.btn-minimize {
+    position: absolute;
+    top: 2rem;
+    right: 6rem;
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: white;
+    padding: 0.8rem;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.btn-minimize:hover {
+    background: rgba(255, 255, 255, 0.2);
+    transform: scale(1.1);
+}
+
+.mini-timer {
+    position: fixed;
+    bottom: 2rem;
+    right: 2rem;
+    width: 280px;
+    padding: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    z-index: 10000;
+    cursor: pointer;
+    border: 1px solid var(--accent-primary);
+    background: rgba(15, 23, 42, 0.8);
+    backdrop-filter: blur(10px);
+}
+
+.mini-timer:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+}
+
+.mini-timer-info {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+    max-width: 160px;
+}
+
+.mini-timer-title {
+    font-size: 0.85rem;
+    font-weight: 600;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.mini-timer-clock {
+    font-size: 1.2rem;
+    font-weight: 800;
+    color: var(--accent-primary);
+    font-variant-numeric: tabular-nums;
+}
+
+.mini-timer-controls {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.mini-btn {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: white;
+    padding: 0.4rem;
+    border-radius: 8px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.mini-btn:hover {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.animate-slide-up {
+    animation: slideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes slideUp {
+    from { transform: translateY(100%) scale(0.9); opacity: 0; }
+    to { transform: translateY(0) scale(1); opacity: 1; }
+}
+
+.day-target-icon {
+    padding: 0.4rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0.8;
+}
