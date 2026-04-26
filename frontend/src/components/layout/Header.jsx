@@ -19,18 +19,27 @@ const Header = () => {
   };
 
   const handleToggleNotifications = async () => {
-    const granted = await NotificationService.requestPermission();
-    setNotificationsEnabled(granted);
-    if (granted) {
-        await NotificationService.registerServiceWorkerAndSubscribe(api);
-        NotificationService.sendNotification("Mobile Push Active! 📱", "You can now receive reminders even when the app is closed.");
-        NotificationService.startReminders(api);
+    if (notificationsEnabled) {
+        // TURN OFF
+        NotificationService.stopReminders();
+        setNotificationsEnabled(false);
+    } else {
+        // TURN ON
+        const granted = await NotificationService.requestPermission();
+        if (granted) {
+            await NotificationService.registerServiceWorkerAndSubscribe(api);
+            NotificationService.sendNotification("FocusFlow Active! 🎯", "Success! You are now connected for mobile reminders.");
+            NotificationService.startReminders(api);
+            setNotificationsEnabled(true);
+        }
     }
   };
 
   React.useEffect(() => {
       if (notificationsEnabled && user) {
           NotificationService.startReminders(api);
+      } else {
+          NotificationService.stopReminders();
       }
       return () => NotificationService.stopReminders();
   }, [notificationsEnabled, user]);
@@ -43,11 +52,11 @@ const Header = () => {
       </div>
       <div className="header-actions">
         <button 
-          className={`theme-cycle-btn ${notificationsEnabled ? 'active' : ''}`} 
+          className={`notif-btn ${notificationsEnabled ? 'notif-on' : 'notif-off'}`} 
           onClick={handleToggleNotifications}
-          title={notificationsEnabled ? "Notifications Active" : "Enable Notifications"}
+          title={notificationsEnabled ? "Notifications: ON" : "Notifications: OFF"}
         >
-          {notificationsEnabled ? <Bell size={20} className="text-accent" /> : <BellOff size={20} />}
+          {notificationsEnabled ? <Bell size={20} /> : <BellOff size={20} />}
         </button>
         <button 
           className="theme-cycle-btn" 
