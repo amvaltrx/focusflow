@@ -27,6 +27,13 @@ class NotificationService {
 
             await api.post('/notifications/subscribe', subscription);
             console.log("Push subscription successful");
+            
+            // Send immediate confirmation through the worker
+            await register.showNotification("FocusFlow Active! 🎯", {
+                body: "Success! You are now connected for mobile reminders.",
+                icon: '/icon.png',
+                vibrate: [200, 100, 200]
+            });
         } catch (err) {
             console.error("Service Worker / Push subscription failed:", err);
         }
