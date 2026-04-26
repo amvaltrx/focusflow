@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef, useMemo } from 'react';
 import { DragDropContext, Droppable, Draggable } from '@hello-pangea/dnd';
-import { Plus, GripVertical, Check, Trash2, Edit3, X, Play, Pause, Square, Search, Filter, Sparkles, Target, Calendar } from 'lucide-react';
+import { Plus, GripVertical, Check, Trash2, Edit3, X, Play, Pause, Square, Search, Filter, Sparkles, Target, Calendar, Timer, Clock } from 'lucide-react';
 import api from '../services/api';
 import './TasksPage.css';
 
