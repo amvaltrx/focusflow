@@ -1,12 +1,15 @@
 import React, { useContext } from 'react';
 import { ThemeContext } from '../../context/ThemeContext';
 import { AuthContext } from '../../context/AuthContext';
-import { Paintbrush, LogOut } from 'lucide-react';
+import { Paintbrush, LogOut, Bell, BellOff } from 'lucide-react';
+import NotificationService from '../../services/NotificationService';
+import api from '../../services/api';
 import './Header.css';
 
 const Header = () => {
   const { theme, changeTheme } = useContext(ThemeContext);
   const { user, logout } = useContext(AuthContext);
+  const [notificationsEnabled, setNotificationsEnabled] = React.useState(Notification.permission === 'granted');
 
   const cycleTheme = () => {
     const themes = ['red-black', 'purple-black', 'light', 'lite'];
@@ -15,6 +18,22 @@ const Header = () => {
     changeTheme(themes[nextIndex]);
   };
 
+  const handleToggleNotifications = async () => {
+    const granted = await NotificationService.requestPermission();
+    setNotificationsEnabled(granted);
+    if (granted) {
+        NotificationService.sendNotification("Notifications Active! ✅", "We'll remind you about pending work every 2 hours.");
+        NotificationService.startReminders(api);
+    }
+  };
+
+  React.useEffect(() => {
+      if (notificationsEnabled && user) {
+          NotificationService.startReminders(api);
+      }
+      return () => NotificationService.stopReminders();
+  }, [notificationsEnabled, user]);
+
   return (
     <header className="header glass-panel">
       <div className="header-greeting">
@@ -22,6 +41,13 @@ const Header = () => {
         <p>Let's maximize your productivity today.</p>
       </div>
       <div className="header-actions">
+        <button 
+          className={`theme-cycle-btn ${notificationsEnabled ? 'active' : ''}`} 
+          onClick={handleToggleNotifications}
+          title={notificationsEnabled ? "Notifications Active" : "Enable Notifications"}
+        >
+          {notificationsEnabled ? <Bell size={20} className="text-accent" /> : <BellOff size={20} />}
+        </button>
         <button 
           className="theme-cycle-btn" 
           onClick={cycleTheme}
