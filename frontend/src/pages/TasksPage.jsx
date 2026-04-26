@@ -485,10 +485,16 @@ const TasksPage = () => {
                             </div>
                           </div>
                           <div className="task-actions">
-                            <button className="btn-icon text-accent focus-play-btn" onClick={() => startFocusTimer(task)} title="Start Focus Mode">
-                              <Play size={18} fill="currentColor" />
-                            </button>
-                            {task.postponedCount > 0 && (
+                            {task.isAllDay ? (
+                                <div className="day-target-icon" title="Day-long Target">
+                                    <Target size={18} className="text-accent" />
+                                </div>
+                            ) : (
+                                <button className="btn-icon text-accent focus-play-btn" onClick={() => startFocusTimer(task)} title="Start Focus Mode">
+                                  <Play size={18} fill="currentColor" />
+                                </button>
+                            )}
+                            {task.postponedCount > 0 && !task.isAllDay && (
                                 <button className="btn-icon text-warning" onClick={() => startFocusTimer(task, true)} title="Start 15-min Micro-deadline">
                                     <Timer size={18} />
                                 </button>
@@ -556,12 +562,14 @@ const TasksPage = () => {
                 <textarea name="description" className="input-field" rows="2" value={formData.description} onChange={handleFormChange}></textarea>
               </div>
               <div className="form-row">
-                  <div className="form-group checkbox-group">
+                  <div className="form-group checkbox-group all-day-row">
                     <label className="checkbox-label">
                         <input type="checkbox" name="isAllDay" checked={formData.isAllDay} onChange={handleFormChange} />
-                        Applicable Whole Day
+                        <span className="checkbox-text">Applicable Whole Day (Day Target)</span>
                     </label>
                   </div>
+              </div>
+              <div className="form-row">
                   {!formData.isAllDay && (
                       <div className="form-group">
                         <label>Time (Mins)</label>
