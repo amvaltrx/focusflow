@@ -64,6 +64,11 @@ const Sidebar = () => {
               <button className="btn btn-primary btn-sm w-full" onClick={submitLog}>
                   <Send size={14} /> Log Now
               </button>
+              {lastLog && (
+                  <div style={{ fontSize: '0.75rem', color: 'var(--text-secondary)', textAlign: 'center', marginTop: '0.5rem' }}>
+                      Last updated: {lastLog.toLocaleTimeString()}
+                  </div>
+              )}
           </div>
       </div>
     </div>
