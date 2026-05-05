@@ -46,6 +46,13 @@ router.get('/', auth, async (req, res) => {
                 currentDay.setDate(currentDay.getDate() + 1);
             }
 
+            let newDeadline;
+            if (task.deadline) {
+                newDeadline = new Date();
+                const oldDeadline = new Date(task.deadline);
+                newDeadline.setHours(oldDeadline.getHours(), oldDeadline.getMinutes(), 0, 0);
+            }
+
             // Spawn today's task
             const nextTask = new Task({
                 userId: task.userId,
@@ -57,7 +64,8 @@ router.get('/', auth, async (req, res) => {
                 isDaily: true,
                 priority: task.priority,
                 category: task.category,
-                subtasks: task.subtasks.map(st => ({ title: st.title, isCompleted: false }))
+                subtasks: task.subtasks ? task.subtasks.map(st => ({ title: st.title, isCompleted: false })) : [],
+                deadline: newDeadline
             });
             await nextTask.save();
         }
@@ -116,6 +124,10 @@ router.patch('/:id/complete', auth, async (req, res) => {
     await task.save();
 
     if (task.isDaily) {
+      const tomorrow = new Date();
+      tomorrow.setDate(tomorrow.getDate() + 1);
+      tomorrow.setHours(0, 0, 0, 0);
+
       const nextTask = new Task({
         userId: task.userId,
         goalId: task.goalId,
@@ -126,7 +138,8 @@ router.patch('/:id/complete', auth, async (req, res) => {
         isDaily: true,
         priority: task.priority,
         category: task.category,
-        subtasks: task.subtasks.map(st => ({ title: st.title, isCompleted: false }))
+        subtasks: task.subtasks ? task.subtasks.map(st => ({ title: st.title, isCompleted: false })) : [],
+        createdDate: tomorrow
       });
       if (task.deadline) {
          const newDeadline = new Date(task.deadline);
