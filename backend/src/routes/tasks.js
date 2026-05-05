@@ -7,9 +7,66 @@ const auth = require('../middleware/auth');
 // Get all tasks for user
 router.get('/', auth, async (req, res) => {
   try {
+    const todayStart = new Date();
+    todayStart.setHours(0, 0, 0, 0);
+
+    const pendingDailyTasks = await Task.find({
+        userId: req.user.id,
+        isDaily: true,
+        status: 'pending',
+        createdDate: { $lt: todayStart }
+    });
+
+    if (pendingDailyTasks.length > 0) {
+        for (let task of pendingDailyTasks) {
+            let currentDay = new Date(task.createdDate);
+            currentDay.setHours(0, 0, 0, 0);
+
+            // Mark original as missed
+            task.status = 'missed';
+            await task.save();
+
+            // Fill gaps if any
+            currentDay.setDate(currentDay.getDate() + 1);
+            while (currentDay < todayStart) {
+                const missedTask = new Task({
+                    userId: task.userId,
+                    goalId: task.goalId,
+                    title: task.title,
+                    description: task.description,
+                    allocatedTime: task.allocatedTime,
+                    isAllDay: task.isAllDay,
+                    isDaily: true,
+                    priority: task.priority,
+                    category: task.category,
+                    status: 'missed',
+                    createdDate: new Date(currentDay)
+                });
+                await missedTask.save();
+                currentDay.setDate(currentDay.getDate() + 1);
+            }
+
+            // Spawn today's task
+            const nextTask = new Task({
+                userId: task.userId,
+                goalId: task.goalId,
+                title: task.title,
+                description: task.description,
+                allocatedTime: task.allocatedTime,
+                isAllDay: task.isAllDay,
+                isDaily: true,
+                priority: task.priority,
+                category: task.category,
+                subtasks: task.subtasks.map(st => ({ title: st.title, isCompleted: false }))
+            });
+            await nextTask.save();
+        }
+    }
+
     const tasks = await Task.find({ userId: req.user.id }).sort({ createdDate: -1 });
     res.json(tasks);
   } catch (err) {
+    console.error(err);
     res.status(500).send('Server Error');
   }
 });
@@ -17,9 +74,9 @@ router.get('/', auth, async (req, res) => {
 // Create a task
 router.post('/', auth, async (req, res) => {
   try {
-    const { title, description, allocatedTime, isAllDay, priority, category, deadline, subtasks } = req.body;
+    const { title, description, allocatedTime, isAllDay, isDaily, priority, category, deadline, subtasks } = req.body;
     const newTask = new Task({
-      userId: req.user.id, title, description, allocatedTime, isAllDay, priority, category, deadline, subtasks
+      userId: req.user.id, title, description, allocatedTime, isAllDay, isDaily, priority, category, deadline, subtasks
     });
     const task = await newTask.save();
     res.json(task);
@@ -31,12 +88,12 @@ router.post('/', auth, async (req, res) => {
 // Update a task
 router.put('/:id', auth, async (req, res) => {
   try {
-    const { title, description, allocatedTime, isAllDay, actualTimeSpent, priority, category, deadline, subtasks } = req.body;
+    const { title, description, allocatedTime, isAllDay, isDaily, actualTimeSpent, priority, category, deadline, subtasks } = req.body;
     let task = await Task.findById(req.params.id);
     if (!task) return res.status(404).json({ message: 'Task not found' });
     if (task.userId.toString() !== req.user.id) return res.status(401).json({ message: 'Not authorized' });
     
-    const updateData = { title, description, allocatedTime, isAllDay, actualTimeSpent, priority, category, deadline, subtasks };
+    const updateData = { title, description, allocatedTime, isAllDay, isDaily, actualTimeSpent, priority, category, deadline, subtasks };
     // Remove undefined fields so they don't overwrite if not provided
     Object.keys(updateData).forEach(key => updateData[key] === undefined && delete updateData[key]);
 
@@ -57,6 +114,28 @@ router.patch('/:id/complete', auth, async (req, res) => {
     task.status = 'completed';
     task.completedDate = new Date();
     await task.save();
+
+    if (task.isDaily) {
+      const nextTask = new Task({
+        userId: task.userId,
+        goalId: task.goalId,
+        title: task.title,
+        description: task.description,
+        allocatedTime: task.allocatedTime,
+        isAllDay: task.isAllDay,
+        isDaily: true,
+        priority: task.priority,
+        category: task.category,
+        subtasks: task.subtasks.map(st => ({ title: st.title, isCompleted: false }))
+      });
+      if (task.deadline) {
+         const newDeadline = new Date(task.deadline);
+         newDeadline.setDate(newDeadline.getDate() + 1);
+         nextTask.deadline = newDeadline;
+      }
+      await nextTask.save();
+    }
+
     res.json(task);
   } catch (err) {
     res.status(500).send('Server Error');

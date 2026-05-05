@@ -8,6 +8,7 @@ import AuthPage from './pages/AuthPage.jsx';
 import DashboardPage from './pages/DashboardPage.jsx';
 import TasksPage from './pages/TasksPage.jsx';
 import GoalsPage from './pages/GoalsPage.jsx';
+import StatsPage from './pages/StatsPage.jsx';
 
 const PrivateRoute = ({ children }) => {
   const { user, loading } = useContext(AuthContext);
@@ -56,6 +57,14 @@ function App() {
               element={
                 <PrivateRoute>
                   <AppLayout><GoalsPage /></AppLayout>
+                </PrivateRoute>
+              } 
+            />
+            <Route 
+              path="/stats" 
+              element={
+                <PrivateRoute>
+                  <AppLayout><StatsPage /></AppLayout>
                 </PrivateRoute>
               } 
             />

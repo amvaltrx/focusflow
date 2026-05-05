@@ -1,6 +1,6 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
-import { LayoutDashboard, CheckSquare, Settings, Smile, Zap, Send, Target } from 'lucide-react';
+import { LayoutDashboard, CheckSquare, Settings, Smile, Zap, Send, Target, BarChart2 } from 'lucide-react';
 import api from '../../services/api';
 import './Sidebar.css';
 
@@ -37,6 +37,10 @@ const Sidebar = () => {
         <NavLink to="/goals" className={({ isActive }) => `nav-item ${isActive ? 'active' : ''} animate-slide-in stagger-3`}>
           <Target size={20} />
           <span>Goals</span>
+        </NavLink>
+        <NavLink to="/stats" className={({ isActive }) => `nav-item ${isActive ? 'active' : ''} animate-slide-in stagger-4`}>
+          <BarChart2 size={20} />
+          <span>Stats</span>
         </NavLink>
       </nav>
 

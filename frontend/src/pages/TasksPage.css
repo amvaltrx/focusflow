@@ -163,6 +163,16 @@
 .priority-badge.medium { background: rgba(245, 158, 11, 0.1); color: var(--warning); }
 .priority-badge.high { background: rgba(239, 68, 68, 0.1); color: var(--danger); }
 
+.daily-badge {
+    padding: 0.2rem 0.5rem;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    font-weight: 500;
+    background: rgba(99, 102, 241, 0.1);
+    color: var(--accent);
+    border: 1px solid rgba(99, 102, 241, 0.2);
+}
+
 .task-actions {
   display: flex;
   gap: 0.2rem;
@@ -196,6 +206,17 @@
 .completed-item h4 {
   text-decoration: line-through;
   color: var(--text-secondary);
+}
+
+.missed-list h3 {
+  color: var(--danger);
+}
+.missed-item {
+  border-color: rgba(239, 68, 68, 0.3);
+  background: rgba(239, 68, 68, 0.05);
+}
+.missed-item h4 {
+  color: var(--danger);
 }
 
 /* Modal CSS */

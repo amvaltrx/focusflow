@@ -17,6 +17,7 @@ const TasksPage = () => {
     description: '',
     allocatedTime: 25,
     isAllDay: false,
+    isDaily: false,
     priority: 'medium',
     category: 'Work',
     deadline: '',
@@ -100,7 +101,7 @@ const TasksPage = () => {
 
   const openAddModal = () => {
     setEditingTaskId(null);
-    setFormData({ title: '', description: '', allocatedTime: 25, isAllDay: false, priority: 'medium', category: 'Work', deadline: '', goalId: '' });
+    setFormData({ title: '', description: '', allocatedTime: 25, isAllDay: false, isDaily: false, priority: 'medium', category: 'Work', deadline: '', goalId: '' });
     setIsModalOpen(true);
   };
 
@@ -111,6 +112,7 @@ const TasksPage = () => {
       description: task.description || '',
       allocatedTime: task.allocatedTime || 25,
       isAllDay: task.isAllDay || false,
+      isDaily: task.isDaily || false,
       priority: task.priority || 'medium',
       category: task.category || 'Work',
       deadline: task.deadline ? new Date(task.deadline).toISOString().split('T')[0] : '',
@@ -347,6 +349,7 @@ const TasksPage = () => {
 
   const pendingTasks = filteredAndSortedTasks.filter(t => t.status === 'pending');
   const completedTasks = filteredAndSortedTasks.filter(t => t.status === 'completed');
+  const missedTasks = filteredAndSortedTasks.filter(t => t.status === 'missed');
 
   return (
     <div className="tasks-page animate-fade-in">
@@ -403,6 +406,7 @@ const TasksPage = () => {
               <option value="all">All</option>
               <option value="pending">Pending</option>
               <option value="completed">Completed</option>
+              <option value="missed">Missed</option>
             </select>
           </div>
           <div className="filter-item">
@@ -466,6 +470,7 @@ const TasksPage = () => {
                             <h4>{task.title}</h4>
                             {task.description && <p className="task-desc">{task.description}</p>}
                             <div className="task-meta">
+                                {task.isDaily && <span className="daily-badge" title="Daily Recurring Task">🔄 Daily</span>}
                                 <span className={`priority-badge ${task.priority}`}>{task.priority}</span>
                                 <span className="category-badge">{task.category}</span>
                                 {task.isAllDay ? (
@@ -543,6 +548,27 @@ const TasksPage = () => {
             ))}
           </div>
         </div>
+
+        <div className="task-list glass-panel missed-list">
+          <h3>Missed ({missedTasks.length})</h3>
+          <div className="droppable-area">
+            {missedTasks.map(task => (
+              <div key={task._id} className="task-item missed-item">
+                <div className="task-content">
+                   <h4>{task.title}</h4>
+                   <div className="task-meta">
+                        <span className="category-badge">{task.category}</span>
+                   </div>
+                </div>
+                <div className="task-actions">
+                    <button className="btn-icon text-danger" onClick={() => deleteTask(task._id)} title="Delete">
+                      <Trash2 size={18} />
+                    </button>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
       </div>
 
       {isModalOpen && (
@@ -566,6 +592,10 @@ const TasksPage = () => {
                     <label className="checkbox-label">
                         <input type="checkbox" name="isAllDay" checked={formData.isAllDay} onChange={handleFormChange} />
                         <span className="checkbox-text">Applicable Whole Day (Day Target)</span>
+                    </label>
+                    <label className="checkbox-label" style={{marginLeft: '20px'}}>
+                        <input type="checkbox" name="isDaily" checked={formData.isDaily} onChange={handleFormChange} />
+                        <span className="checkbox-text">Daily Recurring Task</span>
                     </label>
                   </div>
               </div>

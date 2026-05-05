@@ -38,8 +38,8 @@
 
 .notif-btn {
   background: rgba(255, 255, 255, 0.05);
-  border: 1px solid var(--glass-border);
-  color: var(--text-secondary);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: #94a3b8;
   cursor: pointer;
   padding: 0.6rem;
   border-radius: 50%;
@@ -51,14 +51,14 @@
 
 .notif-btn.notif-on {
   background: rgba(168, 85, 247, 0.15);
-  border-color: var(--accent-primary);
-  color: var(--accent-primary);
-  box-shadow: 0 0 15px rgba(168, 85, 247, 0.3);
+  border-color: #a855f7;
+  color: #a855f7;
+  box-shadow: 0 0 15px rgba(168, 85, 247, 0.4);
   transform: scale(1.1);
 }
 
 .notif-btn.notif-off {
-  color: var(--text-secondary);
+  color: #94a3b8;
   opacity: 0.6;
 }
 

@@ -20,6 +20,11 @@ const FocusSessionSchema = new mongoose.Schema({
   duration: {
     type: Number, // in seconds
     default: 0
+  },
+  createdAt: {
+    type: Date,
+    default: Date.now,
+    expires: 31536000
   }
 }, { timestamps: true });
 

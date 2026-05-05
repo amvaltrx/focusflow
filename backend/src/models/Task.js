@@ -30,13 +30,17 @@ const TaskSchema = new mongoose.Schema({
     type: Boolean,
     default: false
   },
+  isDaily: {
+    type: Boolean,
+    default: false
+  },
   actualTimeSpent: {
     type: Number,
     default: 0
   },
   status: {
     type: String,
-    enum: ['pending', 'completed'],
+    enum: ['pending', 'completed', 'missed'],
     default: 'pending'
   },
   priority: {
@@ -64,7 +68,8 @@ const TaskSchema = new mongoose.Schema({
   }],
   createdDate: {
     type: Date,
-    default: Date.now
+    default: Date.now,
+    expires: 31536000
   },
   completedDate: {
     type: Date

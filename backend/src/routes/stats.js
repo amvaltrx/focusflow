@@ -336,4 +336,58 @@ router.get('/goal-alignment', auth, async (req, res) => {
     }
 });
 
+// GET Monthly Work Report
+router.get('/monthly', auth, async (req, res) => {
+    try {
+        const userId = req.user.id;
+        const twelveMonthsAgo = new Date();
+        twelveMonthsAgo.setMonth(twelveMonthsAgo.getMonth() - 11);
+        twelveMonthsAgo.setDate(1);
+        twelveMonthsAgo.setHours(0, 0, 0, 0);
+
+        const tasks = await Task.find({
+            userId,
+            status: { $in: ['completed', 'missed'] },
+            $or: [
+                { completedDate: { $gte: twelveMonthsAgo } },
+                { createdDate: { $gte: twelveMonthsAgo } }
+            ]
+        });
+
+        const sessions = await FocusSession.find({
+            userId,
+            createdAt: { $gte: twelveMonthsAgo }
+        });
+
+        const monthlyData = [];
+        const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+
+        for (let i = 11; i >= 0; i--) {
+            const d = new Date();
+            d.setMonth(d.getMonth() - i);
+            const monthStart = new Date(d.getFullYear(), d.getMonth(), 1);
+            const monthEnd = new Date(d.getFullYear(), d.getMonth() + 1, 0, 23, 59, 59);
+
+            const monthCompleted = tasks.filter(t => t.status === 'completed' && t.completedDate >= monthStart && t.completedDate <= monthEnd);
+            const monthMissed = tasks.filter(t => t.status === 'missed' && t.createdDate >= monthStart && t.createdDate <= monthEnd);
+            const monthSessions = sessions.filter(s => s.createdAt >= monthStart && s.createdAt <= monthEnd);
+
+            const focusSeconds = monthSessions.reduce((sum, s) => sum + (s.duration || 0), 0);
+
+            monthlyData.push({
+                month: monthNames[d.getMonth()],
+                year: d.getFullYear(),
+                completedTasks: monthCompleted.length,
+                missedTasks: monthMissed.length,
+                focusHours: Math.round(focusSeconds / 3600 * 10) / 10
+            });
+        }
+
+        res.json(monthlyData);
+    } catch (err) {
+        console.error(err);
+        res.status(500).send('Server Error');
+    }
+});
+
 module.exports = router;
