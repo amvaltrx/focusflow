@@ -67,21 +67,23 @@ const DashboardPage = () => {
   if (!stats) return <div>Error loading stats</div>;
 
   const { theme } = React.useContext(ThemeContext);
+  const [colors, setColors] = useState({ border: '#ef4444', bg: 'rgba(239, 68, 68, 0.1)' });
 
-  const getChartColors = () => {
-    switch(theme) {
-      case 'purple-black':
-        return { border: '#a855f7', bg: 'rgba(168, 85, 247, 0.1)' };
-      case 'light':
-      case 'lite':
-        return { border: '#3b82f6', bg: 'rgba(59, 130, 246, 0.1)' };
-      case 'red-black':
-      default:
-        return { border: '#ef4444', bg: 'rgba(239, 68, 68, 0.1)' };
-    }
-  };
-
-  const colors = getChartColors();
+  useEffect(() => {
+    // Use a timeout to ensure the theme class has been applied to the DOM
+    const timer = setTimeout(() => {
+      const style = getComputedStyle(document.body);
+      let border = style.getPropertyValue('--accent-primary').trim();
+      let bg = style.getPropertyValue('--accent-alpha-10').trim();
+      
+      // Fallbacks in case CSS variables are not yet loaded or parsed
+      if (!border) border = '#ef4444';
+      if (!bg) bg = 'rgba(239, 68, 68, 0.1)';
+      
+      setColors({ border, bg });
+    }, 50);
+    return () => clearTimeout(timer);
+  }, [theme]);
 
   const chartData = {
     labels: stats.labels,

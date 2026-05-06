@@ -45,12 +45,16 @@
 .btn-primary {
   background: var(--accent-gradient);
   color: white;
-  box-shadow: 0 4px 15px rgba(239, 68, 68, 0.3);
+  box-shadow: 0 4px 15px var(--accent-alpha-30);
 }
 
 .btn-primary:hover {
   transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(239, 68, 68, 0.4);
+  box-shadow: 0 6px 20px var(--accent-alpha-40);
+}
+
+.btn:active {
+  transform: scale(0.98);
 }
 
 .btn-ghost {
@@ -77,7 +81,7 @@
 
 .input-field:focus {
   border-color: var(--accent-primary);
-  box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1);
+  box-shadow: 0 0 0 3px var(--accent-alpha-20);
 }
 
 /* Animations */

@@ -39,13 +39,13 @@
   transition: all 0.2s ease;
 }
 .nav-item:hover {
-  background: rgba(239, 68, 68, 0.1);
+  background: var(--accent-alpha-10);
   color: var(--accent-primary);
 }
 .nav-item.active {
   background: var(--accent-gradient);
   color: white;
-  box-shadow: 0 4px 12px rgba(239, 68, 68, 0.2);
+  box-shadow: 0 4px 12px var(--accent-alpha-20);
 }
 
 /* Wellness Widget */
