@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const Task = require('../models/Task');
 const FocusSession = require('../models/FocusSession');
+const User = require('../models/User');
 const auth = require('../middleware/auth');
 
 // Get all tasks for user
@@ -138,6 +139,12 @@ router.patch('/:id/complete', auth, async (req, res) => {
     task.completedDate = new Date();
     await task.save();
 
+    // Award points
+    let pointsToAdd = 10;
+    if (task.priority === 'medium') pointsToAdd = 20;
+    if (task.priority === 'high') pointsToAdd = 30;
+    await User.findByIdAndUpdate(req.user.id, { $inc: { points: pointsToAdd } });
+
     if (task.isDaily) {
       const tomorrow = new Date();
       tomorrow.setDate(tomorrow.getDate() + 1);
@@ -201,6 +208,86 @@ router.post('/focus-session', auth, async (req, res) => {
     console.error(err);
     res.status(500).send('Server Error');
   }
+});
+
+// POST Redeem Day Off
+router.post('/redeem-day-off', auth, async (req, res) => {
+    try {
+        const user = await User.findById(req.user.id);
+        if (user.points < 500) {
+            return res.status(400).json({ message: 'Not enough points' });
+        }
+
+        // Deduct points
+        user.points -= 500;
+        await user.save();
+
+        const todayStart = new Date();
+        todayStart.setHours(0, 0, 0, 0);
+        const tomorrowStart = new Date(todayStart.getTime() + 24 * 60 * 60 * 1000);
+
+        const pendingTasks = await Task.find({
+            userId: req.user.id,
+            status: 'pending',
+            $or: [
+                { deadline: { $lte: tomorrowStart } },
+                { deadline: { $exists: false } },
+                { deadline: null }
+            ]
+        });
+
+        for (let task of pendingTasks) {
+            if (task.isDaily) {
+                task.status = 'completed';
+                task.completedDate = new Date();
+                await task.save();
+                
+                const tomorrow = new Date();
+                tomorrow.setDate(tomorrow.getDate() + 1);
+                tomorrow.setHours(0, 0, 0, 0);
+
+                const nextTask = new Task({
+                    userId: task.userId,
+                    goalId: task.goalId,
+                    title: task.title,
+                    description: task.description,
+                    allocatedTime: task.allocatedTime,
+                    isAllDay: task.isAllDay,
+                    isDaily: true,
+                    priority: task.priority,
+                    category: task.category,
+                    subtasks: task.subtasks ? task.subtasks.map(st => ({ title: st.title, isCompleted: false })) : [],
+                    createdDate: tomorrow
+                });
+                if (task.deadline) {
+                    const newDeadline = new Date(task.deadline);
+                    newDeadline.setDate(newDeadline.getDate() + 1);
+                    nextTask.deadline = newDeadline;
+                }
+                await nextTask.save();
+
+            } else {
+                const oldDeadline = task.deadline || new Date();
+                const newDeadline = new Date(oldDeadline);
+                newDeadline.setDate(newDeadline.getDate() + 1);
+                
+                task.postponedCount = (task.postponedCount || 0) + 1;
+                task.rescheduleHistory.push({
+                    previousDeadline: oldDeadline,
+                    newDeadline: newDeadline,
+                    reason: 'Redeemed Day Off',
+                    timestamp: new Date()
+                });
+                task.deadline = newDeadline;
+                await task.save();
+            }
+        }
+
+        res.json({ message: 'Day Off redeemed successfully!', remainingPoints: user.points });
+    } catch (err) {
+        console.error(err);
+        res.status(500).send('Server Error');
+    }
 });
 
 // GET Smart Schedule Suggestion

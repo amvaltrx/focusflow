@@ -1,7 +1,7 @@
 import React, { useContext } from 'react';
 import { ThemeContext } from '../../context/ThemeContext';
 import { AuthContext } from '../../context/AuthContext';
-import { Paintbrush, LogOut, Bell, BellOff } from 'lucide-react';
+import { Paintbrush, LogOut, Bell, BellOff, Star } from 'lucide-react';
 import NotificationService from '../../services/NotificationService';
 import api from '../../services/api';
 import './Header.css';
@@ -51,6 +51,10 @@ const Header = () => {
         <p>Let's maximize your productivity today.</p>
       </div>
       <div className="header-actions">
+        <div className="points-badge" title="Earn points by completing tasks!">
+            <Star size={18} className="text-warning" fill="currentColor" />
+            <span>{user?.points || 0} Pts</span>
+        </div>
         <button 
           className={`notif-btn ${notificationsEnabled ? 'notif-on' : 'notif-off'}`} 
           onClick={handleToggleNotifications}

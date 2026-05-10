@@ -1,5 +1,5 @@
 import React, { createContext, useState, useEffect } from 'react';
-// import { jwtDecode } from 'jwt-decode';
+import api from '../services/api';
 
 export const AuthContext = createContext();
 
@@ -13,18 +13,37 @@ export const AuthProvider = ({ children }) => {
       const storedToken = localStorage.getItem('token');
       if (storedToken) {
         setToken(storedToken);
-        // In a real app, we would verify the token here
-        setUser({ username: 'amvaltrx' }); 
+        try {
+            const res = await api.get('/auth/me');
+            setUser(res.data);
+        } catch (err) {
+            console.error('Auth check failed', err);
+            setUser({ username: 'amvaltrx', points: 0 }); 
+        }
       }
       setLoading(false);
     };
     checkAuth();
   }, []);
 
-  const login = (jwtToken) => {
+  const fetchUser = async () => {
+      try {
+          const res = await api.get('/auth/me');
+          setUser(res.data);
+      } catch (err) {
+          console.error(err);
+      }
+  };
+
+  const login = async (jwtToken) => {
     localStorage.setItem('token', jwtToken);
     setToken(jwtToken);
-    setUser({ username: 'amvaltrx' });
+    try {
+        const res = await api.get('/auth/me', { headers: { Authorization: `Bearer ${jwtToken}` }});
+        setUser(res.data);
+    } catch {
+        setUser({ username: 'amvaltrx', points: 0 });
+    }
   };
 
   const logout = () => {
@@ -34,7 +53,7 @@ export const AuthProvider = ({ children }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ user, token, login, logout, loading }}>
+    <AuthContext.Provider value={{ user, token, login, logout, loading, fetchUser, setUser }}>
       {!loading && children}
     </AuthContext.Provider>
   );

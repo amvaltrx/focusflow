@@ -13,8 +13,9 @@ import {
 import { Line } from 'react-chartjs-2';
 import api from '../services/api';
 import './DashboardPage.css';
-import { Flame, CheckCircle, Clock, Timer, AlertCircle, Lightbulb, Activity, Award, Target, ZapOff, HeartPulse, ShieldAlert } from 'lucide-react';
+import { Flame, CheckCircle, Clock, Timer, AlertCircle, Lightbulb, Activity, Award, Target, ZapOff, HeartPulse, ShieldAlert, Star, Gift } from 'lucide-react';
 import { ThemeContext } from '../context/ThemeContext';
+import { AuthContext } from '../context/AuthContext';
 
 ChartJS.register(
   CategoryScale,
@@ -64,7 +65,26 @@ const DashboardPage = () => {
   }, []);
 
   const { theme } = React.useContext(ThemeContext);
+  const { user, fetchUser } = React.useContext(AuthContext);
   const [colors, setColors] = useState({ border: '#ef4444', bg: 'rgba(239, 68, 68, 0.1)' });
+
+  const redeemDayOff = async () => {
+      if ((user?.points || 0) < 500) {
+          alert('Not enough points to redeem this reward!');
+          return;
+      }
+      if (window.confirm('Redeem 500 points for a Day Off? This will postpone all standard pending tasks for today to tomorrow, and auto-complete daily tasks to protect your streak!')) {
+          try {
+              await api.post('/tasks/redeem-day-off');
+              alert('Day Off Redeemed! Enjoy your break. 🏖️');
+              if (fetchUser) fetchUser();
+              window.location.reload();
+          } catch(err) {
+              console.error(err);
+              alert(err.response?.data?.message || 'Error redeeming reward.');
+          }
+      }
+  };
 
   useEffect(() => {
     // Use a timeout to ensure the theme class has been applied to the DOM
@@ -220,6 +240,27 @@ const DashboardPage = () => {
           </div>
           <p className="progress-text">{stats.dailyPercentage}% of your active tasks mapped out for today are completed. Keep pushing!</p>
         </div>
+      </div>
+
+      <div className="rewards-section glass-panel animate-fade-in">
+          <div className="insights-header">
+              <Gift className="text-accent" size={20} />
+              <h3>Rewards Store</h3>
+          </div>
+          <div style={{ marginTop: '1rem', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '1rem' }}>
+              <div>
+                  <h4 style={{ margin: 0, fontSize: '1.1rem' }}>Buy a "Day Off" 🏖️</h4>
+                  <p className="text-secondary" style={{ margin: '0.2rem 0 0 0', fontSize: '0.9rem' }}>Postpone all tasks to tomorrow while protecting your streaks.</p>
+              </div>
+              <button 
+                  className="btn btn-primary" 
+                  onClick={redeemDayOff}
+                  disabled={(user?.points || 0) < 500}
+                  style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}
+              >
+                  <Star size={16} fill="currentColor" /> 500 Pts
+              </button>
+          </div>
       </div>
 
       {insights && insights.insights && insights.insights.length > 0 && (

@@ -2,12 +2,14 @@ import React, { useEffect, useState, useRef, useMemo } from 'react';
 import { DragDropContext, Droppable, Draggable } from '@hello-pangea/dnd';
 import { Plus, GripVertical, Check, Trash2, Edit3, X, Play, Pause, Square, Search, Filter, Sparkles, Target, Calendar, Timer, Clock, Minus } from 'lucide-react';
 import api from '../services/api';
+import { AuthContext } from '../context/AuthContext';
 import './TasksPage.css';
 
 const TasksPage = () => {
   const [tasks, setTasks] = useState([]);
   const [goals, setGoals] = useState([]);
   const [loading, setLoading] = useState(true);
+  const { fetchUser } = React.useContext(AuthContext);
 
   // Modal State
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -164,6 +166,7 @@ const TasksPage = () => {
     setTasks(tasks.map(t => t._id === id ? { ...t, status: 'completed' } : t));
     try {
       await api.patch(`/tasks/${id}/complete`);
+      if (fetchUser) fetchUser();
     } catch (err) {
       console.error(err);
     }
