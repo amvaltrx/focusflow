@@ -15,7 +15,7 @@ export const AuthProvider = ({ children }) => {
         setToken(storedToken);
         try {
             const res = await api.get('/auth/me');
-            setUser(res.data);
+            setUser(res.data || { username: 'amvaltrx', points: 0 });
         } catch (err) {
             console.error('Auth check failed', err);
             setUser({ username: 'amvaltrx', points: 0 }); 
@@ -29,7 +29,7 @@ export const AuthProvider = ({ children }) => {
   const fetchUser = async () => {
       try {
           const res = await api.get('/auth/me');
-          setUser(res.data);
+          setUser(res.data || { username: 'amvaltrx', points: 0 });
       } catch (err) {
           console.error(err);
       }
@@ -40,7 +40,7 @@ export const AuthProvider = ({ children }) => {
     setToken(jwtToken);
     try {
         const res = await api.get('/auth/me', { headers: { Authorization: `Bearer ${jwtToken}` }});
-        setUser(res.data);
+        setUser(res.data || { username: 'amvaltrx', points: 0 });
     } catch {
         setUser({ username: 'amvaltrx', points: 0 });
     }
