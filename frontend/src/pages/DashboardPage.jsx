@@ -63,9 +63,6 @@ const DashboardPage = () => {
     fetchDashboardData();
   }, []);
 
-  if (loading) return <div>Loading dashboard...</div>;
-  if (!stats) return <div>Error loading stats</div>;
-
   const { theme } = React.useContext(ThemeContext);
   const [colors, setColors] = useState({ border: '#ef4444', bg: 'rgba(239, 68, 68, 0.1)' });
 
@@ -84,6 +81,11 @@ const DashboardPage = () => {
     }, 50);
     return () => clearTimeout(timer);
   }, [theme]);
+
+  if (loading) return <div>Loading dashboard...</div>;
+  if (!stats) return <div>Error loading stats</div>;
+
+
 
   const chartData = {
     labels: stats.labels,
