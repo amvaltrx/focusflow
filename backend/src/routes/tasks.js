@@ -350,7 +350,10 @@ router.get('/smart-schedule', auth, async (req, res) => {
 
         // 3. Build Schedule
         const suggestedSchedule = [];
-        let currentHour = Math.max(new Date().getHours() + 1, 9); // Start next hour or 9am
+        const clientHourParam = parseInt(req.query.clientHour);
+        const baseHour = !isNaN(clientHourParam) ? clientHourParam : new Date().getHours();
+
+        let currentHour = Math.max(baseHour + 1, 9); // Start next hour or 9am
         if (currentHour > 18) currentHour = 9; // If late, plan for tomorrow 9am
 
         sortedTasks.forEach(task => {

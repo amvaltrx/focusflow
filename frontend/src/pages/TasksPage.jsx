@@ -263,7 +263,8 @@ const TasksPage = () => {
   const fetchSmartPlan = async () => {
       setLoading(true);
       try {
-          const res = await api.get('/tasks/smart-schedule');
+          const currentHour = new Date().getHours();
+          const res = await api.get(`/tasks/smart-schedule?clientHour=${currentHour}`);
           setSmartPlan(res.data);
           setShowSmartPlan(true);
       } catch (err) {
