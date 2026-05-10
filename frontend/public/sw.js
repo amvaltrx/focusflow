@@ -1,3 +1,5 @@
+/* eslint-env serviceworker */
+
 self.addEventListener('push', function(event) {
     const data = event.data.json();
     const options = {

@@ -7,14 +7,12 @@ import './Sidebar.css';
 const Sidebar = () => {
   const [mood, setMood] = React.useState(3);
   const [energy, setEnergy] = React.useState(3);
-  const [isLogging, setIsLogging] = React.useState(false);
   const [lastLog, setLastLog] = React.useState(null);
 
   const submitLog = async () => {
       try {
           await api.post('/logs', { mood, energy });
           setLastLog(new Date());
-          setIsLogging(false);
           alert('Wellness log saved!');
       } catch (err) {
           console.error(err);
