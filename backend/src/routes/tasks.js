@@ -71,6 +71,21 @@ router.get('/', auth, async (req, res) => {
         }
     }
 
+    // Process Overdue non-daily tasks
+    const overdueTasks = await Task.find({
+        userId: req.user.id,
+        isDaily: false,
+        status: 'pending',
+        deadline: { $lt: todayStart }
+    });
+
+    if (overdueTasks.length > 0) {
+        for (let task of overdueTasks) {
+            task.status = 'missed';
+            await task.save();
+        }
+    }
+
     const tasks = await Task.find({ userId: req.user.id }).sort({ createdDate: -1 });
     res.json(tasks);
   } catch (err) {
