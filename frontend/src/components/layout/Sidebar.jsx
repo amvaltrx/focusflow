@@ -1,7 +1,8 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
-import { LayoutDashboard, CheckSquare, Settings, Smile, Zap, Send, Target, BarChart2, MonitorPlay } from 'lucide-react';
+import { LayoutDashboard, CheckSquare, Settings, Smile, Zap, Send, Target, BarChart2, MonitorPlay, Download, Upload } from 'lucide-react';
 import api from '../../services/api';
+import LocalDbService from '../../services/LocalDbService';
 import ZenMode from '../ZenMode';
 import { AuthContext } from '../../context/AuthContext';
 import { calculateLevel } from '../../utils/leveling';
@@ -25,6 +26,33 @@ const Sidebar = () => {
           console.error(err);
       }
   };
+
+  const handleExport = async () => {
+      const data = await LocalDbService.exportData();
+      const blob = new Blob([data], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `focusflow-backup-${new Date().toISOString().split('T')[0]}.json`;
+      a.click();
+  };
+
+  const handleImport = async (e) => {
+      const file = e.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = async (event) => {
+          try {
+              await LocalDbService.importData(event.target.result);
+              alert('Data imported successfully! App will now reload.');
+              window.location.reload();
+          } catch (err) {
+              alert('Failed to import data. Invalid backup file.');
+          }
+      };
+      reader.readAsText(file);
+  };
+
   return (
     <div className="sidebar glass-panel">
       <div className="sidebar-logo animate-float">
@@ -96,6 +124,16 @@ const Sidebar = () => {
                   </div>
               )}
           </div>
+      </div>
+
+      <div style={{ display: 'flex', gap: '0.5rem', marginTop: '1rem' }}>
+          <button className="btn btn-ghost btn-sm w-full" onClick={handleExport} style={{ fontSize: '0.75rem', padding: '0.5rem' }}>
+              <Download size={14} /> Backup
+          </button>
+          <label className="btn btn-ghost btn-sm w-full" style={{ fontSize: '0.75rem', padding: '0.5rem', cursor: 'pointer', margin: 0, textAlign: 'center' }}>
+              <Upload size={14} /> Restore
+              <input type="file" accept=".json" style={{ display: 'none' }} onChange={handleImport} />
+          </label>
       </div>
     </div>
   );
