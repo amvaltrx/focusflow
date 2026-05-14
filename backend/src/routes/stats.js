@@ -390,4 +390,32 @@ router.get('/monthly', auth, async (req, res) => {
     }
 });
 
+// GET Heatmap Data
+router.get('/heatmap', auth, async (req, res) => {
+    try {
+        const userId = req.user.id;
+        const oneYearAgo = new Date();
+        oneYearAgo.setFullYear(oneYearAgo.getFullYear() - 1);
+        oneYearAgo.setHours(0, 0, 0, 0);
+
+        const tasks = await Task.find({
+            userId,
+            status: 'completed',
+            completedDate: { $gte: oneYearAgo }
+        });
+
+        // Group by day (YYYY-MM-DD)
+        const heatmapData = {};
+        tasks.forEach(task => {
+            const dateStr = new Date(task.completedDate).toISOString().split('T')[0];
+            heatmapData[dateStr] = (heatmapData[dateStr] || 0) + 1;
+        });
+
+        res.json(Object.keys(heatmapData).map(date => ({ date, count: heatmapData[date] })));
+    } catch (err) {
+        console.error(err);
+        res.status(500).send('Server Error');
+    }
+});
+
 module.exports = router;

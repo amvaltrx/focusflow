@@ -475,6 +475,13 @@ const TasksPage = () => {
                           <div className="task-content">
                             <h4>{task.title}</h4>
                             {task.description && <p className="task-desc">{task.description}</p>}
+                            {task.postponedCount >= 3 && (
+                                <div className="procrastination-nudge">
+                                    <span style={{ color: 'var(--danger)', fontSize: '0.85rem', fontWeight: 600 }}>
+                                        ⚠️ Postponed {task.postponedCount} times. Consider breaking this down!
+                                    </span>
+                                </div>
+                            )}
                             <div className="task-meta">
                                 {task.isDaily && <span className="daily-badge" title="Daily Recurring Task">🔄 Daily</span>}
                                 <span className={`priority-badge ${task.priority}`}>{task.priority}</span>

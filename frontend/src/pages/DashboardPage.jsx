@@ -16,6 +16,8 @@ import './DashboardPage.css';
 import { Flame, CheckCircle, Clock, Timer, AlertCircle, Lightbulb, Activity, Award, Target, ZapOff, HeartPulse, ShieldAlert, Star, Gift } from 'lucide-react';
 import { ThemeContext } from '../context/ThemeContext';
 import { AuthContext } from '../context/AuthContext';
+import VirtualCompanion from '../components/VirtualCompanion';
+import { calculateLevel, UNLOCKABLE_THEMES } from '../utils/leveling';
 
 ChartJS.register(
   CategoryScale,
@@ -64,9 +66,11 @@ const DashboardPage = () => {
     fetchDashboardData();
   }, []);
 
-  const { theme } = React.useContext(ThemeContext);
+  const { theme, changeTheme } = React.useContext(ThemeContext);
   const { user, fetchUser } = React.useContext(AuthContext);
   const [colors, setColors] = useState({ border: '#ef4444', bg: 'rgba(239, 68, 68, 0.1)' });
+
+  const { level } = calculateLevel(user?.totalXp || 0);
 
   const redeemDayOff = async () => {
       if ((user?.points || 0) < 500) {
@@ -215,14 +219,21 @@ const DashboardPage = () => {
       </div>
 
       <div className="dashboard-main grid-2">
-        <div className="glass-panel chart-container animate-fade-in stagger-1">
+        {/* Virtual Companion takes up left column, chart right column */}
+        <div className="stagger-1">
+            <VirtualCompanion />
+        </div>
+        
+        <div className="glass-panel chart-container animate-fade-in stagger-2">
           <h3>Work Capacity (Minutes)</h3>
           <div className="chart-wrapper">
             <Line options={chartOptions} data={chartData} />
           </div>
         </div>
-        
-        <div className="glass-panel progress-container animate-fade-in stagger-2">
+      </div>
+
+      <div className="dashboard-main grid-2" style={{marginTop: '0'}}>
+        <div className="glass-panel progress-container animate-fade-in stagger-3">
           <h3>Today's Progress</h3>
           <div className="circular-progress">
             <svg viewBox="0 0 36 36" className="circular-chart">
@@ -260,6 +271,37 @@ const DashboardPage = () => {
               >
                   <Star size={16} fill="currentColor" /> 500 Pts
               </button>
+          </div>
+
+          <div style={{ marginTop: '2rem', paddingTop: '1.5rem', borderTop: '1px solid var(--glass-border)' }}>
+              <h4 style={{ margin: '0 0 1rem 0', fontSize: '1.1rem' }}>Theme Progression</h4>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))', gap: '1rem' }}>
+                  {UNLOCKABLE_THEMES.filter(t => t.reqLevel > 1).map(t => {
+                      const isUnlocked = level >= t.reqLevel;
+                      return (
+                          <div key={t.id} style={{
+                              padding: '1rem',
+                              borderRadius: '8px',
+                              background: isUnlocked ? 'var(--accent-alpha-10)' : 'rgba(0,0,0,0.1)',
+                              border: `1px solid ${isUnlocked ? 'var(--accent-primary)' : 'var(--glass-border)'}`,
+                              display: 'flex',
+                              flexDirection: 'column',
+                              alignItems: 'center',
+                              gap: '0.5rem',
+                              opacity: isUnlocked ? 1 : 0.6
+                          }}>
+                              <span style={{ fontWeight: '600' }}>{t.name}</span>
+                              {isUnlocked ? (
+                                  <button className="btn btn-sm" onClick={() => changeTheme(t.id)} style={{ fontSize: '0.75rem', padding: '0.3rem 0.6rem' }}>
+                                      {theme === t.id ? 'Active' : 'Equip'}
+                                  </button>
+                              ) : (
+                                  <span style={{ fontSize: '0.8rem', color: 'var(--text-secondary)' }}>Unlocks at Lvl {t.reqLevel}</span>
+                              )}
+                          </div>
+                      );
+                  })}
+              </div>
           </div>
       </div>
 

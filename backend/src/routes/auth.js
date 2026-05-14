@@ -10,7 +10,7 @@ router.get('/me', auth, async (req, res) => {
     let user = await User.findById(req.user.id).select('-password');
     if (!user) {
         // Create the dummy user to support the hardcoded auth bypass
-        user = new User({ _id: req.user.id, username: 'FocusUser', password: 'bypasspassword', points: 0 });
+        user = new User({ _id: req.user.id, username: 'FocusUser', password: 'bypasspassword', points: 0, totalXp: 0 });
         await user.save();
     }
     res.json(user);

@@ -1,0 +1,108 @@
+.virtual-companion-widget {
+    padding: 1.5rem;
+    border-radius: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    position: relative;
+    overflow: hidden;
+}
+
+.companion-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.companion-header h3 {
+    margin: 0;
+    font-size: 1.2rem;
+}
+
+.companion-level-badge {
+    background: rgba(245, 158, 11, 0.2);
+    color: var(--warning);
+    padding: 0.2rem 0.6rem;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+}
+
+.companion-avatar-container {
+    display: flex;
+    justify-content: center;
+    padding: 1.5rem 0;
+}
+
+.companion-avatar {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 3rem;
+    background: radial-gradient(circle, rgba(99,102,241,0.2) 0%, rgba(0,0,0,0) 70%);
+    position: relative;
+}
+
+.health-0 { filter: grayscale(100%); opacity: 0.6; }
+.health-1 { filter: hue-rotate(45deg); }
+.health-2 { filter: drop-shadow(0 0 10px rgba(16, 185, 129, 0.4)); }
+
+.companion-status {
+    text-align: center;
+    font-size: 0.9rem;
+    color: var(--text-muted);
+    margin: 0;
+    font-style: italic;
+}
+
+.companion-stats {
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+    margin-top: 0.5rem;
+}
+
+.stat-row {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+}
+
+.stat-label {
+    width: 65px;
+    font-size: 0.8rem;
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    color: var(--text-light);
+}
+
+.stat-bar-container {
+    flex: 1;
+    height: 8px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.stat-bar {
+    height: 100%;
+    border-radius: 4px;
+    transition: width 0.5s ease-in-out;
+}
+
+.bg-danger { background-color: var(--danger); }
+.bg-accent { background-color: var(--accent); }
+
+.stat-value {
+    width: 50px;
+    font-size: 0.75rem;
+    text-align: right;
+    color: var(--text-muted);
+}

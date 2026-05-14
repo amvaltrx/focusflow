@@ -1,13 +1,20 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
-import { LayoutDashboard, CheckSquare, Settings, Smile, Zap, Send, Target, BarChart2 } from 'lucide-react';
+import { LayoutDashboard, CheckSquare, Settings, Smile, Zap, Send, Target, BarChart2, MonitorPlay } from 'lucide-react';
 import api from '../../services/api';
+import ZenMode from '../ZenMode';
+import { AuthContext } from '../../context/AuthContext';
+import { calculateLevel } from '../../utils/leveling';
 import './Sidebar.css';
 
 const Sidebar = () => {
   const [mood, setMood] = React.useState(3);
   const [energy, setEnergy] = React.useState(3);
   const [lastLog, setLastLog] = React.useState(null);
+  const [showZenMode, setShowZenMode] = React.useState(false);
+  const { user } = React.useContext(AuthContext);
+
+  const { level, title, progressPercent } = calculateLevel(user?.totalXp || 0);
 
   const submitLog = async () => {
       try {
@@ -23,6 +30,17 @@ const Sidebar = () => {
       <div className="sidebar-logo animate-float">
         <h2 className="logo-text">Focus<span>Flow</span></h2>
       </div>
+
+      <div className="player-profile glass-panel animate-fade-in stagger-1">
+        <div className="profile-header">
+            <span className="profile-title">{title}</span>
+            <span className="profile-level">Lvl {level}</span>
+        </div>
+        <div className="xp-bar-container" title={`${Math.round(progressPercent)}% to next level`}>
+            <div className="xp-bar-fill" style={{ width: `${progressPercent}%` }}></div>
+        </div>
+      </div>
+
       <nav className="sidebar-nav">
         <NavLink to="/" className={({ isActive }) => `nav-item ${isActive ? 'active' : ''} animate-slide-in stagger-1`}>
           <LayoutDashboard size={20} />
@@ -40,7 +58,17 @@ const Sidebar = () => {
           <BarChart2 size={20} />
           <span>Stats</span>
         </NavLink>
+        <button 
+          onClick={() => setShowZenMode(true)} 
+          className="nav-item animate-slide-in stagger-4"
+          style={{ background: 'transparent', border: 'none', color: 'inherit', width: '100%', textAlign: 'left', cursor: 'pointer', fontFamily: 'inherit', fontSize: '1rem' }}
+        >
+          <MonitorPlay size={20} />
+          <span>Zen Mode</span>
+        </button>
       </nav>
+
+      {showZenMode && <ZenMode onClose={() => setShowZenMode(false)} />}
 
       <div className="wellness-widget glass-panel">
           <div className="widget-header">

@@ -6,12 +6,17 @@ import './StatsPage.css';
 const StatsPage = () => {
     const [monthlyData, setMonthlyData] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [heatmapData, setHeatmapData] = useState([]);
 
     useEffect(() => {
         const fetchStats = async () => {
             try {
-                const res = await api.get('/stats/monthly');
-                setMonthlyData(res.data);
+                const [monthlyRes, heatmapRes] = await Promise.all([
+                    api.get('/stats/monthly'),
+                    api.get('/stats/heatmap')
+                ]);
+                setMonthlyData(monthlyRes.data);
+                setHeatmapData(heatmapRes.data);
             } catch (err) {
                 console.error("Error fetching stats", err);
             } finally {
@@ -22,6 +27,24 @@ const StatsPage = () => {
     }, []);
 
     if (loading) return <div className="stats-page"><div className="stats-loading">Loading statistics...</div></div>;
+
+    // Heatmap Logic
+    const today = new Date();
+    const startDate = new Date(today.getTime() - 364 * 24 * 60 * 60 * 1000);
+    const dateMap = {};
+    heatmapData.forEach(d => { dateMap[d.date] = d.count; });
+    
+    const weeks = [];
+    let currentWeek = [];
+    for (let i = 0; i < 365; i++) {
+        const d = new Date(startDate.getTime() + i * 24 * 60 * 60 * 1000);
+        const dateStr = d.toISOString().split('T')[0];
+        currentWeek.push({ date: dateStr, count: dateMap[dateStr] || 0 });
+        if (currentWeek.length === 7 || i === 364) {
+            weeks.push(currentWeek);
+            currentWeek = [];
+        }
+    }
 
     const maxTasks = Math.max(...monthlyData.map(d => Math.max(d.completedTasks, d.missedTasks || 0)), 1);
     const maxFocus = Math.max(...monthlyData.map(d => d.focusHours), 1);
@@ -76,7 +99,40 @@ const StatsPage = () => {
                 </div>
             </div>
             
-            <div className="stats-summary glass-panel animate-slide-in stagger-3">
+            <div className="heatmap-section glass-panel animate-slide-in stagger-3">
+                <h3><Target size={18} /> 365-Day Productivity Heatmap</h3>
+                <div className="heatmap-grid-container">
+                    <div className="heatmap-grid">
+                        {weeks.map((week, wIdx) => (
+                            <div key={wIdx} className="heatmap-week">
+                                {week.map((day, dIdx) => {
+                                    let level = '0';
+                                    if (day.count === 1) level = '1';
+                                    else if (day.count === 2) level = '2';
+                                    else if (day.count >= 3) level = '3';
+                                    return (
+                                        <div 
+                                            key={dIdx} 
+                                            className={`heatmap-cell level-${level}`}
+                                            title={`${day.date}: ${day.count} tasks`}
+                                        ></div>
+                                    );
+                                })}
+                            </div>
+                        ))}
+                    </div>
+                    <div className="heatmap-legend">
+                        <span>Less</span>
+                        <div className="heatmap-cell level-0"></div>
+                        <div className="heatmap-cell level-1"></div>
+                        <div className="heatmap-cell level-2"></div>
+                        <div className="heatmap-cell level-3"></div>
+                        <span>More</span>
+                    </div>
+                </div>
+            </div>
+
+            <div className="stats-summary glass-panel animate-slide-in stagger-4">
                 <h3><Activity size={18} /> Year in Review</h3>
                 <div className="summary-stats">
                     <div className="summary-item">

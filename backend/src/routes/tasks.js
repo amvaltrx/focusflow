@@ -19,12 +19,14 @@ router.get('/', auth, async (req, res) => {
     });
 
     if (pendingDailyTasks.length > 0) {
+        let healthDeduction = 0;
         for (let task of pendingDailyTasks) {
             let currentDay = new Date(task.createdDate);
             currentDay.setHours(0, 0, 0, 0);
 
             // Mark original as missed
             task.status = 'missed';
+            healthDeduction += 10;
             await task.save();
 
             // Fill gaps if any
@@ -83,7 +85,16 @@ router.get('/', auth, async (req, res) => {
     if (overdueTasks.length > 0) {
         for (let task of overdueTasks) {
             task.status = 'missed';
+            healthDeduction += 10;
             await task.save();
+        }
+    }
+
+    if (healthDeduction > 0) {
+        const userToDamage = await User.findById(req.user.id);
+        if (userToDamage) {
+            userToDamage.companionHealth = Math.max(0, (userToDamage.companionHealth || 100) - healthDeduction);
+            await userToDamage.save();
         }
     }
 
@@ -139,11 +150,27 @@ router.patch('/:id/complete', auth, async (req, res) => {
     task.completedDate = new Date();
     await task.save();
 
-    // Award points
+    // Award points & Companion EXP
     let pointsToAdd = 10;
     if (task.priority === 'medium') pointsToAdd = 20;
     if (task.priority === 'high') pointsToAdd = 30;
-    await User.findByIdAndUpdate(req.user.id, { $inc: { points: pointsToAdd } });
+
+    let expToAdd = 50;
+    if (task.priority === 'high') expToAdd = 100;
+
+    const userToUpdate = await User.findById(req.user.id);
+    if (userToUpdate) {
+        userToUpdate.points = (userToUpdate.points || 0) + pointsToAdd;
+        userToUpdate.totalXp = (userToUpdate.totalXp || 0) + pointsToAdd;
+        userToUpdate.companionExp = (userToUpdate.companionExp || 0) + expToAdd;
+        const requiredExp = (userToUpdate.companionLevel || 1) * 500;
+        if (userToUpdate.companionExp >= requiredExp) {
+            userToUpdate.companionExp -= requiredExp;
+            userToUpdate.companionLevel = (userToUpdate.companionLevel || 1) + 1;
+            userToUpdate.companionHealth = 100;
+        }
+        await userToUpdate.save();
+    }
 
     if (task.isDaily) {
       const tomorrow = new Date();
@@ -203,6 +230,23 @@ router.post('/focus-session', auth, async (req, res) => {
       duration
     });
     await newSession.save();
+
+    // Award EXP for focus session (1 EXP per minute)
+    if (duration > 60) {
+        const userToUpdate = await User.findById(req.user.id);
+        if (userToUpdate) {
+            const expToAdd = Math.floor(duration / 60);
+            userToUpdate.companionExp = (userToUpdate.companionExp || 0) + expToAdd;
+            const requiredExp = (userToUpdate.companionLevel || 1) * 500;
+            if (userToUpdate.companionExp >= requiredExp) {
+                userToUpdate.companionExp -= requiredExp;
+                userToUpdate.companionLevel = (userToUpdate.companionLevel || 1) + 1;
+                userToUpdate.companionHealth = 100;
+            }
+            await userToUpdate.save();
+        }
+    }
+
     res.json(newSession);
   } catch (err) {
     console.error(err);

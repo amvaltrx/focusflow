@@ -4,6 +4,7 @@ import { AuthContext } from '../../context/AuthContext';
 import { Paintbrush, LogOut, Bell, BellOff, Star } from 'lucide-react';
 import NotificationService from '../../services/NotificationService';
 import api from '../../services/api';
+import { calculateLevel, UNLOCKABLE_THEMES } from '../../utils/leveling';
 import './Header.css';
 
 const Header = () => {
@@ -11,11 +12,13 @@ const Header = () => {
   const { user, logout } = useContext(AuthContext);
   const [notificationsEnabled, setNotificationsEnabled] = React.useState(Notification.permission === 'granted');
 
+  const { level } = calculateLevel(user?.totalXp || 0);
+
   const cycleTheme = () => {
-    const themes = ['red-black', 'purple-black', 'light', 'lite'];
-    const currentIndex = themes.indexOf(theme);
-    const nextIndex = (currentIndex + 1) % themes.length;
-    changeTheme(themes[nextIndex]);
+    const availableThemes = UNLOCKABLE_THEMES.filter(t => level >= t.reqLevel).map(t => t.id);
+    const currentIndex = availableThemes.indexOf(theme) !== -1 ? availableThemes.indexOf(theme) : 0;
+    const nextIndex = (currentIndex + 1) % availableThemes.length;
+    changeTheme(availableThemes[nextIndex]);
   };
 
   const handleToggleNotifications = async () => {

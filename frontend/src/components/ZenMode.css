@@ -1,0 +1,134 @@
+.zen-mode-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: 9999;
+    background: linear-gradient(135deg, #0f172a, #1e1b4b);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: white;
+}
+
+/* Add a beautiful animated background mesh */
+.zen-mode-overlay::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle at center, rgba(99, 102, 241, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(236, 72, 153, 0.1) 0%, transparent 40%);
+    animation: rotate 60s linear infinite;
+    pointer-events: none;
+    z-index: -1;
+}
+
+@keyframes rotate {
+    100% { transform: rotate(360deg); }
+}
+
+.zen-controls-top {
+    position: absolute;
+    top: 2rem;
+    right: 2rem;
+    display: flex;
+    gap: 1.5rem;
+}
+
+.zen-btn {
+    background: rgba(255, 255, 255, 0.1);
+    border: none;
+    color: white;
+    padding: 0.8rem 1.5rem;
+    border-radius: 30px;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    cursor: pointer;
+    backdrop-filter: blur(10px);
+    transition: all 0.3s;
+    font-size: 1rem;
+    font-weight: 500;
+}
+
+.zen-btn:hover {
+    background: rgba(255, 255, 255, 0.2);
+    transform: scale(1.05);
+}
+
+.zen-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 3rem;
+}
+
+.zen-time {
+    font-size: 12rem;
+    font-weight: 200;
+    margin: 0;
+    font-variant-numeric: tabular-nums;
+    text-shadow: 0 0 40px rgba(99, 102, 241, 0.4);
+    line-height: 1;
+}
+
+.zen-actions {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+}
+
+.zen-play-btn {
+    background: white;
+    color: #0f172a;
+    border: none;
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+}
+
+.zen-play-btn:hover {
+    transform: scale(1.1);
+    box-shadow: 0 15px 35px rgba(255,255,255,0.2);
+}
+
+.zen-stop-btn {
+    background: transparent;
+    color: rgba(255,255,255,0.5);
+    border: 2px solid rgba(255,255,255,0.2);
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.zen-stop-btn:hover {
+    color: white;
+    border-color: white;
+    background: rgba(255,255,255,0.1);
+}
+
+.zen-quote {
+    position: absolute;
+    bottom: 4rem;
+    font-size: 1.2rem;
+    font-style: italic;
+    color: rgba(255,255,255,0.5);
+    max-width: 600px;
+    text-align: center;
+}
