@@ -21,10 +21,10 @@ jobs:
       with:
         node-version: 22
 
-    - name: Set up JDK 21
+    - name: Set up JDK 17
       uses: actions/setup-java@v4
       with:
-        java-version: '21'
+        java-version: '17'
         distribution: 'temurin'
 
     - name: Install Dependencies & Build Web App
@@ -46,9 +46,9 @@ jobs:
         ./gradlew assembleDebug --stacktrace 2>&1 | tee build.log
         if [ ${PIPESTATUS[0]} -ne 0 ]; then
           echo '```text' > issue_body.md
-          tail -n 100 build.log >> issue_body.md
+          grep -C 20 "Caused by" build.log >> issue_body.md || head -n 100 build.log >> issue_body.md
           echo '```' >> issue_body.md
-          gh issue create --repo amvaltrx/focusflow --title "Build Failed: Gradle Log" --body-file issue_body.md
+          gh issue create --repo amvaltrx/focusflow --title "Build Failed: Full Error Context" --body-file issue_body.md
           exit 1
         fi
 
