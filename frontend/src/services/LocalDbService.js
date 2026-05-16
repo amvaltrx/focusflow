@@ -274,6 +274,3 @@ class LocalDbService {
 }
 
 export default new LocalDbService();
-
-
-export default new LocalDbService();
