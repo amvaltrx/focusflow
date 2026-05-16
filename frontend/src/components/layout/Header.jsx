@@ -11,7 +11,9 @@ import './Header.css';
 const Header = () => {
   const { theme, changeTheme } = useContext(ThemeContext);
   const { user, logout } = useContext(AuthContext);
-  const [notificationsEnabled, setNotificationsEnabled] = React.useState(Notification.permission === 'granted');
+  const [notificationsEnabled, setNotificationsEnabled] = React.useState(
+    typeof Notification !== 'undefined' && Notification.permission === 'granted'
+  );
 
   const { level } = calculateLevel(user?.totalXp || 0);
 
