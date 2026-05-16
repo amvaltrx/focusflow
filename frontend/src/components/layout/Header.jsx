@@ -99,8 +99,8 @@ const Header = () => {
         >
           <Paintbrush size={20} />
         </button>
-        <button className="btn btn-ghost" onClick={logout}>
-          <LogOut size={18} /> Logout
+        <button className="theme-cycle-btn" onClick={logout} title="Logout">
+          <LogOut size={20} />
         </button>
       </div>
     </header>
