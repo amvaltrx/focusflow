@@ -22,6 +22,10 @@ const GoalsPage = () => {
   };
 
   useEffect(() => {
+    fetchGoals();
+  }, []);
+
+  useEffect(() => {
     if (isModalOpen) {
       document.body.classList.add('modal-open');
     } else {
@@ -29,6 +33,7 @@ const GoalsPage = () => {
     }
     return () => document.body.classList.remove('modal-open');
   }, [isModalOpen]);
+
 
   const handleSaveGoal = async (e) => {
 
