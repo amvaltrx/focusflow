@@ -1,138 +1,85 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
 
 :root {
-  /* LIGHT THEME VARIABLES */
-  --bg-primary: #F8F9FA;
+  /* GLOBAL TOKENS */
+  --font-main: 'Plus Jakarta Sans', sans-serif;
+  --border-radius-sm: 10px;
+  --border-radius-md: 16px;
+  --border-radius-lg: 24px;
+  --border-radius-xl: 32px;
+  --transition-speed: 0.4s;
+  
+  /* LIGHT THEME (REFRESHED) */
+  --bg-primary: #F8FAFC;
   --bg-secondary: #FFFFFF;
-  --bg-mesh: radial-gradient(at 0% 0%, rgba(99, 102, 241, 0.1) 0px, transparent 50%), radial-gradient(at 100% 100%, rgba(139, 92, 246, 0.1) 0px, transparent 50%), var(--bg-primary);
-  --text-primary: #1F2937;
-  --text-secondary: #6B7280;
+  --bg-mesh: radial-gradient(at 0% 0%, rgba(99, 102, 241, 0.08) 0px, transparent 50%), radial-gradient(at 100% 100%, rgba(45, 212, 191, 0.08) 0px, transparent 50%), #F8FAFC;
+  --text-primary: #0F172A;
+  --text-secondary: #64748B;
   
   --accent-primary: #6366F1;
-  --accent-secondary: #8B5CF6;
-  --accent-gradient: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
-  
-  --accent-alpha-10: color-mix(in srgb, var(--accent-primary) 10%, transparent);
-  --accent-alpha-20: color-mix(in srgb, var(--accent-primary) 20%, transparent);
-  --accent-alpha-30: color-mix(in srgb, var(--accent-primary) 30%, transparent);
-  --accent-alpha-40: color-mix(in srgb, var(--accent-primary) 40%, transparent);
+  --accent-secondary: #2DD4BF;
+  --accent-gradient: linear-gradient(135deg, #6366F1, #2DD4BF);
   
   --glass-bg: rgba(255, 255, 255, 0.7);
-  --glass-border: rgba(255, 255, 255, 0.4);
-  --glass-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.05);
-
-  --danger: #EF4444;
-  --success: #10B981;
-  --warning: #F59E0B;
+  --glass-border: rgba(255, 255, 255, 0.5);
+  --glass-shadow: 0 10px 40px rgba(0, 0, 0, 0.04);
   
-  --border-radius-sm: 8px;
-  --border-radius-md: 12px;
-  --border-radius-lg: 20px;
-  --border-radius-xl: 30px;
-  
-  --transition-speed: 0.3s;
-  
-  --font-body: 'Inter', sans-serif;
-  --font-heading: 'Outfit', sans-serif;
+  --font-body: 'Plus Jakarta Sans', sans-serif;
+  --font-heading: 'Plus Jakarta Sans', sans-serif;
 }
 
 [data-theme='red-black'] {
-  --bg-primary: #050505;
-  --bg-secondary: #111111;
-  --bg-mesh: radial-gradient(at 0% 0%, rgba(239, 68, 68, 0.15) 0px, transparent 50%), radial-gradient(at 100% 100%, rgba(153, 27, 27, 0.15) 0px, transparent 50%), #050505;
-  --text-primary: #ffffff;
-  --text-secondary: #a1a1aa;
+  --bg-primary: #020617;
+  --bg-secondary: #0F172A;
+  --bg-mesh: radial-gradient(at 0% 0%, rgba(239, 68, 68, 0.12) 0px, transparent 40%), radial-gradient(at 100% 100%, rgba(30, 41, 59, 0.4) 0px, transparent 50%), #020617;
+  --text-primary: #F8FAFC;
+  --text-secondary: #94A3B8;
   
-  --accent-primary: #ef4444;
-  --accent-secondary: #991b1b;
-  --accent-gradient: linear-gradient(135deg, #ef4444, #7f1d1d);
+  --accent-primary: #EF4444;
+  --accent-secondary: #B91C1C;
+  --accent-gradient: linear-gradient(135deg, #EF4444, #7F1D1D);
   
-  --glass-bg: rgba(17, 17, 17, 0.75);
-  --glass-border: rgba(239, 68, 68, 0.2);
-  --glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.8);
+  --glass-bg: rgba(15, 23, 42, 0.6);
+  --glass-border: rgba(239, 68, 68, 0.15);
+  --glass-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
 }
 
 [data-theme='purple-black'] {
-  --bg-primary: #050505;
-  --bg-secondary: #111111;
-  --bg-mesh: radial-gradient(at 0% 0%, rgba(168, 85, 247, 0.15) 0px, transparent 50%), radial-gradient(at 100% 100%, rgba(107, 33, 168, 0.15) 0px, transparent 50%), #050505;
-  --text-primary: #ffffff;
-  --text-secondary: #a1a1aa;
+  --bg-primary: #020617;
+  --bg-secondary: #0F172A;
+  --bg-mesh: radial-gradient(at 0% 0%, rgba(139, 92, 246, 0.15) 0px, transparent 50%), radial-gradient(at 100% 100%, rgba(79, 70, 229, 0.15) 0px, transparent 50%), #020617;
+  --text-primary: #F8FAFC;
+  --text-secondary: #94A3B8;
   
-  --accent-primary: #a855f7;
-  --accent-secondary: #7e22ce;
-  --accent-gradient: linear-gradient(135deg, #a855f7, #6b21a8);
+  --accent-primary: #8B5CF6;
+  --accent-secondary: #4F46E5;
+  --accent-gradient: linear-gradient(135deg, #8B5CF6, #4F46E5);
   
-  --glass-bg: rgba(17, 17, 17, 0.75);
-  --glass-border: rgba(168, 85, 247, 0.2);
-  --glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.8);
-}
-
-[data-theme='lite'] {
-  --bg-primary: #f8fafc;
-  --bg-secondary: #ffffff;
-  --bg-mesh: radial-gradient(at 0% 0%, rgba(59, 130, 246, 0.1) 0px, transparent 50%), radial-gradient(at 100% 100%, rgba(37, 99, 235, 0.1) 0px, transparent 50%), #f8fafc;
-  --text-primary: #0f172a;
-  --text-secondary: #475569;
-  
-  --accent-primary: #3b82f6;
-  --accent-secondary: #1d4ed8;
-  --accent-gradient: linear-gradient(135deg, #3b82f6, #1d4ed8);
-  
-  --glass-bg: rgba(255, 255, 255, 0.85);
-  --glass-border: rgba(59, 130, 246, 0.15);
-  --glass-shadow: 0 4px 20px 0 rgba(0, 0, 0, 0.05);
-  
-  --transition-speed: 0.3s;
-}
-
-[data-theme='gold-black'] {
-  --bg-primary: #050505;
-  --bg-secondary: #111111;
-  --bg-mesh: radial-gradient(at 0% 0%, rgba(245, 158, 11, 0.15) 0px, transparent 50%), radial-gradient(at 100% 100%, rgba(217, 119, 6, 0.15) 0px, transparent 50%), #050505;
-  --text-primary: #ffffff;
-  --text-secondary: #a1a1aa;
-  
-  --accent-primary: #f59e0b;
-  --accent-secondary: #d97706;
-  --accent-gradient: linear-gradient(135deg, #f59e0b, #b45309);
-  
-  --glass-bg: rgba(17, 17, 17, 0.75);
-  --glass-border: rgba(245, 158, 11, 0.2);
-  --glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.8);
+  --glass-bg: rgba(15, 23, 42, 0.65);
+  --glass-border: rgba(139, 92, 246, 0.2);
+  --glass-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
 }
 
 [data-theme='cyberpunk'] {
-  --bg-primary: #000b18;
-  --bg-secondary: #00122e;
-  --bg-mesh: radial-gradient(at 0% 0%, rgba(6, 182, 212, 0.15) 0px, transparent 50%), radial-gradient(at 100% 100%, rgba(236, 72, 153, 0.15) 0px, transparent 50%), #000b18;
-  --text-primary: #ffffff;
-  --text-secondary: #a1a1aa;
-  
-  --accent-primary: #06b6d4;
-  --accent-secondary: #ec4899;
-  --accent-gradient: linear-gradient(135deg, #06b6d4, #ec4899);
-  
-  --glass-bg: rgba(0, 18, 46, 0.75);
-  --glass-border: rgba(6, 182, 212, 0.2);
-  --glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.8);
+  --bg-primary: #020617;
+  --bg-secondary: #0F172A;
+  --bg-mesh: radial-gradient(at 0% 0%, rgba(6, 182, 212, 0.2) 0px, transparent 50%), radial-gradient(at 100% 100%, rgba(236, 72, 153, 0.2) 0px, transparent 50%), #020617;
+  --accent-primary: #22D3EE;
+  --accent-secondary: #F472B6;
+  --accent-gradient: linear-gradient(135deg, #22D3EE, #F472B6);
+  --glass-border: rgba(34, 211, 238, 0.3);
 }
 
 [data-theme='neon-flow'] {
   --bg-primary: #020617;
-  --bg-secondary: #0f172a;
-  --bg-mesh: radial-gradient(at 0% 0%, rgba(16, 185, 129, 0.15) 0px, transparent 50%), radial-gradient(at 100% 100%, rgba(52, 211, 153, 0.15) 0px, transparent 50%), #020617;
-  --text-primary: #ffffff;
-  --text-secondary: #94a3b8;
-  
-  --accent-primary: #10b981;
-  --accent-secondary: #059669;
-  --accent-gradient: linear-gradient(135deg, #34d399, #059669);
-  
-  --glass-bg: rgba(15, 23, 42, 0.75);
-  --glass-border: rgba(16, 185, 129, 0.2);
-  --glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.8);
+  --bg-secondary: #0F172A;
+  --bg-mesh: radial-gradient(at 0% 0%, rgba(34, 197, 94, 0.15) 0px, transparent 50%), radial-gradient(at 100% 100%, rgba(20, 184, 166, 0.15) 0px, transparent 50%), #020617;
+  --accent-primary: #22C55E;
+  --accent-secondary: #14B8A6;
+  --accent-gradient: linear-gradient(135deg, #4ADE80, #14B8A6);
+  --glass-border: rgba(34, 197, 94, 0.2);
 }
+
 
 * {
   margin: 0;
@@ -141,34 +88,50 @@
 }
 
 body {
-  font-family: var(--font-body);
+  font-family: var(--font-main);
   background: var(--bg-mesh, var(--bg-primary));
   background-attachment: fixed;
   background-size: cover;
   color: var(--text-primary);
   transition: background var(--transition-speed), color var(--transition-speed);
   overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Hide scrollbars for a clean native look */
+::-webkit-scrollbar {
+  display: none;
+}
+* {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
 }
 
 h1, h2, h3, h4, h5, h6 {
-  font-family: var(--font-heading);
-  font-weight: 600;
-  letter-spacing: -0.02em;
+  font-family: var(--font-main);
+  font-weight: 800;
+  letter-spacing: -0.04em;
+  line-height: 1.1;
 }
 
-/* Scrollbar styling */
-::-webkit-scrollbar {
-  width: 8px;
+.glass-panel {
+  background: var(--glass-bg);
+  backdrop-filter: blur(24px) saturate(180%);
+  -webkit-backdrop-filter: blur(24px) saturate(180%);
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--glass-shadow);
+  border-radius: var(--border-radius-lg);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
-::-webkit-scrollbar-track {
+
+.main-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  padding: 1.5rem;
   background: transparent;
-}
-::-webkit-scrollbar-thumb {
-  background: var(--text-secondary);
-  border-radius: 4px;
-}
-::-webkit-scrollbar-thumb:hover {
-  background: var(--accent-primary);
 }
 
 /* Performance overrides for low-end browsers */
