@@ -30,6 +30,11 @@ body.modal-open .stats-header,
 body.modal-open .stats-grid,
 body.modal-open .stats-summary,
 body.modal-open .heatmap-section,
+body.modal-open .dashboard-header,
+body.modal-open .insights-section,
+body.modal-open .rewards-section,
+body.modal-open .wellness-section,
+body.modal-open .procrastination-insights,
 body.modal-open .header,
 body.modal-open .bottom-nav {
   transform: scale(0.92) translateY(-10px);
@@ -37,6 +42,7 @@ body.modal-open .bottom-nav {
   pointer-events: none;
   user-select: none;
 }
+
 
 
 
