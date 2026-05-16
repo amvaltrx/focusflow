@@ -17,7 +17,20 @@
   padding: 1.5rem;
   width: 100%;
   max-width: 100vw;
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), filter 0.4s ease, opacity 0.4s ease;
 }
+
+/* Global Sinking Effect */
+body.modal-open .main-content,
+body.modal-open .bottom-nav,
+body.modal-open .header {
+  transform: scale(0.92) translateY(-10px);
+  filter: blur(8px) brightness(0.6);
+  pointer-events: none;
+  border-radius: 24px;
+  overflow: hidden;
+}
+
 
 /* Glassmorphism Classes */
 .glass-panel {

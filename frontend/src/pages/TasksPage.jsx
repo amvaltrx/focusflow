@@ -93,7 +93,17 @@ const TasksPage = () => {
     return () => clearInterval(timerRef.current);
   }, [isTimerRunning, timeLeft]);
 
+  useEffect(() => {
+    if (isModalOpen) {
+      document.body.classList.add('modal-open');
+    } else {
+      document.body.classList.remove('modal-open');
+    }
+    return () => document.body.classList.remove('modal-open');
+  }, [isModalOpen]);
+
   const handleDragEnd = async (result) => {
+
     if (!result.destination) return;
     const pendingItems = tasks.filter(t => t.status === 'pending');
     if (result.source.droppableId === 'pending-list' && result.destination.droppableId === 'pending-list') {
