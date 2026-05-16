@@ -89,3 +89,33 @@
 .notif-btn:active {
   transform: scale(0.9);
 }
+
+.update-badge {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: var(--accent-primary);
+  color: white;
+  padding: 0.5rem 0.8rem;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-decoration: none;
+  box-shadow: 0 4px 15px var(--accent-alpha-30);
+  transition: transform 0.2s;
+}
+
+.update-badge:hover {
+  transform: translateY(-2px);
+  color: white;
+}
+
+.animate-pulse {
+  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.8; transform: scale(0.95); }
+}
+
