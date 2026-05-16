@@ -410,8 +410,11 @@
     flex-direction: row;
     flex-wrap: wrap;
     justify-content: flex-end;
-    max-width: 100px;
+    align-items: flex-start;
+    max-width: 110px;
+    gap: 0.4rem;
   }
+
 
   .focus-title {
     font-size: 1.8rem;
