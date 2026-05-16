@@ -9,6 +9,21 @@
     <link rel="apple-touch-icon" href="/pwa-192x192.png">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <script>
+      window.onerror = function(msg, url, lineNo, columnNo, error) {
+        var div = document.createElement('div');
+        div.style.cssText = 'position:fixed;top:0;left:0;width:100%;background:#ef4444;color:white;z-index:999999;padding:15px;font-family:monospace;font-size:12px;box-shadow:0 4px 10px rgba(0,0,0,0.5);word-break:break-all;';
+        div.innerHTML = '<strong>APP CRASH DETECTED:</strong><br>' + msg + '<br><br>Line: ' + lineNo + ' Col: ' + columnNo + '<br>Stack: ' + (error ? error.stack : 'N/A');
+        document.body.appendChild(div);
+        return false;
+      };
+      window.onunhandledrejection = function(event) {
+        var div = document.createElement('div');
+        div.style.cssText = 'position:fixed;bottom:0;left:0;width:100%;background:#f59e0b;color:black;z-index:999999;padding:15px;font-family:monospace;font-size:12px;';
+        div.innerHTML = '<strong>PROMISE REJECTION:</strong><br>' + event.reason;
+        document.body.appendChild(div);
+      };
+    </script>
   </head>
   <body>
     <div id="root"></div>

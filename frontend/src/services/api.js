@@ -1,7 +1,11 @@
 import LocalDbService from './LocalDbService';
 
 // Initialize the local DB defaults on boot
-LocalDbService.initDefaults();
+try {
+    LocalDbService.initDefaults().catch(err => console.error('DB Init Error', err));
+} catch (e) {
+    console.error('Top-level DB Init Crash', e);
+}
 
 // Mock the Axios API interface to seamlessly route to LocalDbService
 const api = {
