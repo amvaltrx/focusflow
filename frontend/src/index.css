@@ -20,16 +20,24 @@
   transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), filter 0.4s ease, opacity 0.4s ease;
 }
 
-/* Global Sinking Effect */
-body.modal-open .main-content,
-body.modal-open .bottom-nav,
-body.modal-open .header {
+/* Global Sinking Effect - Selective Blurring */
+body.modal-open .tasks-header,
+body.modal-open .filter-bar,
+body.modal-open .tasks-lists,
+body.modal-open .goals-header,
+body.modal-open .goals-grid,
+body.modal-open .stats-header,
+body.modal-open .stats-grid,
+body.modal-open .stats-summary,
+body.modal-open .heatmap-section,
+body.modal-open .header,
+body.modal-open .bottom-nav {
   transform: scale(0.92) translateY(-10px);
   filter: blur(8px) brightness(0.6);
   pointer-events: none;
-  border-radius: 24px;
-  overflow: hidden;
+  user-select: none;
 }
+
 
 
 /* Glassmorphism Classes */
