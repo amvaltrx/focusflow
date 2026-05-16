@@ -13,7 +13,7 @@
       window.onerror = function(msg, url, lineNo, columnNo, error) {
         var div = document.createElement('div');
         div.style.cssText = 'position:fixed;top:0;left:0;width:100%;background:#ef4444;color:white;z-index:999999;padding:15px;font-family:monospace;font-size:12px;box-shadow:0 4px 10px rgba(0,0,0,0.5);word-break:break-all;';
-        div.innerHTML = '<strong>APP CRASH DETECTED:</strong><br>' + msg + '<br><br>Line: ' + lineNo + ' Col: ' + columnNo + '<br>Stack: ' + (error ? error.stack : 'N/A');
+        div.innerHTML = '<div style="display:flex;justify-content:space-between;align-items:start"><strong>APP CRASH DETECTED:</strong><button onclick="this.parentElement.parentElement.remove()" style="background:white;color:red;border:none;padding:2px 8px;border-radius:4px;font-weight:bold">X</button></div><br>' + msg + '<br><br>Line: ' + lineNo + ' Col: ' + columnNo + '<br>Stack: ' + (error ? error.stack : 'N/A');
         document.body.appendChild(div);
         return false;
       };
