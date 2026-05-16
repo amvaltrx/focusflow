@@ -139,12 +139,28 @@
 .stagger-4 { animation-delay: 0.4s; }
 .stagger-5 { animation-delay: 0.5s; }
 
-/* Responsiveness */
 @media (max-width: 768px) {
   .app-container {
     flex-direction: column;
   }
   .main-content {
     padding: 1rem;
+    margin-left: 0 !important;
+    width: 100% !important;
+    padding-bottom: 90px !important; /* Space for BottomNav */
+  }
+  .sidebar {
+    display: none !important;
   }
 }
+
+:root {
+  --safe-area-top: env(safe-area-inset-top, 0px);
+  --safe-area-bottom: env(safe-area-inset-bottom, 0px);
+}
+
+body {
+  padding-top: var(--safe-area-top);
+  padding-bottom: var(--safe-area-bottom);
+}
+

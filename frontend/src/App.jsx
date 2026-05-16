@@ -4,6 +4,7 @@ import { ThemeProvider } from './context/ThemeContext';
 import { AuthProvider, AuthContext } from './context/AuthContext';
 import Sidebar from './components/layout/Sidebar.jsx';
 import Header from './components/layout/Header.jsx';
+import BottomNav from './components/layout/BottomNav.jsx';
 import AuthPage from './pages/AuthPage.jsx';
 import DashboardPage from './pages/DashboardPage.jsx';
 import TasksPage from './pages/TasksPage.jsx';
@@ -18,7 +19,7 @@ const PrivateRoute = ({ children }) => {
 };
 
 const AppLayout = ({ children }) => (
-  <div className="app-container animate-fade-in">
+  <>
     <Sidebar />
     <div className="main-content">
       <Header />
@@ -26,7 +27,7 @@ const AppLayout = ({ children }) => (
         {children}
       </div>
     </div>
-  </div>
+  </>
 );
 
 function App() {
@@ -34,41 +35,19 @@ function App() {
     <ThemeProvider>
       <AuthProvider>
         <Router>
-          <Routes>
-            <Route path="/login" element={<AuthPage />} />
-            <Route 
-              path="/" 
-              element={
-                <PrivateRoute>
-                  <AppLayout><DashboardPage /></AppLayout>
-                </PrivateRoute>
-              } 
-            />
-            <Route 
-              path="/tasks" 
-              element={
-                <PrivateRoute>
-                  <AppLayout><TasksPage /></AppLayout>
-                </PrivateRoute>
-              } 
-            />
-            <Route 
-              path="/goals" 
-              element={
-                <PrivateRoute>
-                  <AppLayout><GoalsPage /></AppLayout>
-                </PrivateRoute>
-              } 
-            />
-            <Route 
-              path="/stats" 
-              element={
-                <PrivateRoute>
-                  <AppLayout><StatsPage /></AppLayout>
-                </PrivateRoute>
-              } 
-            />
-          </Routes>
+          <div className="app-container">
+            <AppLayout>
+              <Routes>
+                <Route path="/login" element={<AuthPage />} />
+                <Route path="/" element={<PrivateRoute><DashboardPage /></PrivateRoute>} />
+                <Route path="/tasks" element={<PrivateRoute><TasksPage /></PrivateRoute>} />
+                <Route path="/goals" element={<PrivateRoute><GoalsPage /></PrivateRoute>} />
+                <Route path="/stats" element={<PrivateRoute><StatsPage /></PrivateRoute>} />
+                <Route path="*" element={<Navigate to="/" />} />
+              </Routes>
+            </AppLayout>
+            <BottomNav />
+          </div>
         </Router>
       </AuthProvider>
     </ThemeProvider>
