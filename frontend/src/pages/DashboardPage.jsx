@@ -224,14 +224,12 @@ const DashboardPage = () => {
             <VirtualCompanion />
         </div>
         
-        {/* 
         <div className="glass-panel chart-container animate-fade-in stagger-2">
           <h3>Work Capacity (Minutes)</h3>
           <div className="chart-wrapper">
             <Line options={chartOptions} data={chartData} />
           </div>
         </div>
-        */}
       </div>
 
       <div className="dashboard-main grid-2" style={{marginTop: '0'}}>
