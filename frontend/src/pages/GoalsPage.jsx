@@ -22,11 +22,16 @@ const GoalsPage = () => {
   };
 
   useEffect(() => {
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    fetchGoals();
-  }, []);
+    if (isModalOpen) {
+      document.body.classList.add('modal-open');
+    } else {
+      document.body.classList.remove('modal-open');
+    }
+    return () => document.body.classList.remove('modal-open');
+  }, [isModalOpen]);
 
   const handleSaveGoal = async (e) => {
+
     e.preventDefault();
     try {
       if (isEditing) {

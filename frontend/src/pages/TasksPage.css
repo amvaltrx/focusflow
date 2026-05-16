@@ -373,14 +373,8 @@
     transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), filter 0.4s ease;
   }
 
-  .tasks-page.modal-active {
-    transform: scale(0.94) translateY(-10px);
-    filter: blur(4px) brightness(0.7);
-    border-radius: 24px;
-    overflow: hidden;
-  }
-
   .tasks-lists {
+
     display: flex !important;
     flex-direction: column !important;
     gap: 2rem !important;
