@@ -253,50 +253,39 @@ const DashboardPage = () => {
         </div>
       </div>
 
-      <div className="rewards-section glass-panel animate-fade-in">
+      <div className="rewards-section glass-panel animate-fade-in stagger-4">
           <div className="insights-header">
               <Gift className="text-accent" size={20} />
               <h3>Rewards Store</h3>
           </div>
-          <div style={{ marginTop: '1rem', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '1rem' }}>
-              <div>
-                  <h4 style={{ margin: 0, fontSize: '1.1rem' }}>Buy a "Day Off" 🏖️</h4>
-                  <p className="text-secondary" style={{ margin: '0.2rem 0 0 0', fontSize: '0.9rem' }}>Postpone all tasks to tomorrow while protecting your streaks.</p>
+          <div className="reward-item">
+              <div className="reward-info">
+                  <h4>Buy a "Day Off" 🏖️</h4>
+                  <p className="text-secondary">Postpone all tasks to tomorrow while protecting your streaks.</p>
               </div>
               <button 
                   className="btn btn-primary" 
                   onClick={redeemDayOff}
                   disabled={(user?.points || 0) < 500}
-                  style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}
               >
                   <Star size={16} fill="currentColor" /> 500 Pts
               </button>
           </div>
 
-          <div style={{ marginTop: '2rem', paddingTop: '1.5rem', borderTop: '1px solid var(--glass-border)' }}>
-              <h4 style={{ margin: '0 0 1rem 0', fontSize: '1.1rem' }}>Theme Progression</h4>
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))', gap: '1rem' }}>
+          <div className="theme-progression">
+              <h4>Theme Progression</h4>
+              <div className="theme-grid">
                   {UNLOCKABLE_THEMES.filter(t => t.reqLevel > 1).map(t => {
                       const isUnlocked = level >= t.reqLevel;
                       return (
-                          <div key={t.id} style={{
-                              padding: '1rem',
-                              borderRadius: '8px',
-                              background: isUnlocked ? 'var(--accent-alpha-10)' : 'rgba(0,0,0,0.1)',
-                              border: `1px solid ${isUnlocked ? 'var(--accent-primary)' : 'var(--glass-border)'}`,
-                              display: 'flex',
-                              flexDirection: 'column',
-                              alignItems: 'center',
-                              gap: '0.5rem',
-                              opacity: isUnlocked ? 1 : 0.6
-                          }}>
-                              <span style={{ fontWeight: '600' }}>{t.name}</span>
+                          <div key={t.id} className={`theme-card ${isUnlocked ? 'unlocked' : 'locked'}`}>
+                              <span className="theme-name">{t.name}</span>
                               {isUnlocked ? (
-                                  <button className="btn btn-sm" onClick={() => changeTheme(t.id)} style={{ fontSize: '0.75rem', padding: '0.3rem 0.6rem' }}>
+                                  <button className="btn btn-sm" onClick={() => changeTheme(t.id)}>
                                       {theme === t.id ? 'Active' : 'Equip'}
                                   </button>
                               ) : (
-                                  <span style={{ fontSize: '0.8rem', color: 'var(--text-secondary)' }}>Unlocks at Lvl {t.reqLevel}</span>
+                                  <span className="lock-text">Lvl {t.reqLevel}</span>
                               )}
                           </div>
                       );
@@ -304,6 +293,7 @@ const DashboardPage = () => {
               </div>
           </div>
       </div>
+
 
       {insights && insights.insights && insights.insights.length > 0 && (
           <div className="procrastination-insights glass-panel animate-fade-in">
