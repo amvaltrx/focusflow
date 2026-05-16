@@ -119,3 +119,24 @@
   50% { opacity: 0.8; transform: scale(0.95); }
 }
 
+@media (max-width: 768px) {
+  .header {
+    padding: 1rem;
+  }
+
+  .header-greeting h3 {
+    font-size: 1.1rem;
+  }
+
+  .header-greeting p {
+    display: none;
+  }
+
+  .header-actions {
+    gap: 0.5rem;
+  }
+
+  .points-badge span {
+    display: none;
+  }
+}
