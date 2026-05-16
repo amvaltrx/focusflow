@@ -1,11 +1,147 @@
+.stats-page {
+    padding: 1rem;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.stats-header {
+    margin-bottom: 1.5rem;
+}
+
+.stats-header h2 {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 1.8rem;
+    color: var(--text-primary);
+    margin-bottom: 0.5rem;
+}
+
+.stats-header p {
+    color: var(--text-secondary);
+}
+
+.stats-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.stats-card {
+    padding: 1.5rem;
+    border-radius: var(--border-radius-lg);
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+}
+
+.stats-card h3 {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 1.5rem;
+    color: var(--text-primary);
+    font-size: 1.1rem;
+}
+
+.stats-card .chart-container {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-end;
+    justify-content: space-between;
+    height: 200px;
+    padding: 1rem 0 0 0;
+    gap: 0.5rem;
+}
+
+.chart-bar-group {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    flex: 1;
+    height: 100%;
+    gap: 0.5rem;
+}
+
+.chart-bar-wrapper {
+    height: 100%;
+    width: 100%;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    background: rgba(255, 255, 255, 0.03);
+    border-radius: 4px;
+    position: relative;
+    flex: 1;
+    overflow: hidden;
+}
+
+.chart-bar {
+    width: 60%;
+    border-radius: 4px;
+    transition: height 1s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.tasks-bar { background: var(--accent-gradient); }
+.missed-bar { background: linear-gradient(to top, #ef4444, #991b1b); }
+.focus-bar { background: linear-gradient(to top, #10b981, #059669); }
+
+.chart-label {
+    font-size: 0.7rem;
+    color: var(--text-secondary);
+    font-weight: 600;
+}
+
+.stats-summary {
+    padding: 2rem;
+    border-radius: var(--border-radius-lg);
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    margin-bottom: 2rem;
+}
+
+.summary-stats {
+    display: flex;
+    justify-content: space-around;
+    gap: 2rem;
+}
+
+.summary-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.summary-value {
+    font-size: 2.8rem;
+    font-weight: 800;
+    color: var(--accent-primary);
+    letter-spacing: -0.05em;
+}
+
+.summary-label {
+    color: var(--text-secondary);
+    font-size: 0.85rem;
+    font-weight: 700;
+    text-transform: uppercase;
+}
+
+.heatmap-section {
+    padding: 1.5rem;
+    border-radius: var(--border-radius-lg);
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    margin-bottom: 2rem;
+}
 
 .heatmap-section h3 {
     display: flex;
     align-items: center;
     gap: 0.5rem;
     margin-bottom: 1.5rem;
-    color: var(--text-light);
-    font-size: 1.25rem;
+    color: var(--text-primary);
+    font-size: 1.1rem;
 }
 
 .heatmap-grid-container {
@@ -32,25 +168,24 @@
     height: 14px;
     border-radius: 3px;
     background-color: rgba(255, 255, 255, 0.05);
-    transition: all 0.2s ease;
-    cursor: pointer;
 }
 
-.heatmap-cell:hover {
-    transform: scale(1.1);
-    box-shadow: 0 0 8px rgba(99, 102, 241, 0.5);
-    z-index: 10;
-}
+.heatmap-cell.level-1 { background-color: var(--accent-alpha-30); }
+.heatmap-cell.level-2 { background-color: var(--accent-alpha-60); }
+.heatmap-cell.level-3 { background-color: var(--accent-primary); }
 
-.heatmap-cell.level-1 { background-color: rgba(99, 102, 241, 0.3); }
-.heatmap-cell.level-2 { background-color: rgba(99, 102, 241, 0.6); }
-.heatmap-cell.level-3 { background-color: var(--accent); }
+@media (max-width: 768px) {
+    .stats-grid {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+    
+    .summary-stats {
+        flex-direction: column;
+        gap: 1.5rem;
+    }
 
-.heatmap-legend {
-    display: flex;
-    align-items: center;
-    justify-content: flex-end;
-    gap: 0.5rem;
-    font-size: 0.8rem;
-    color: var(--text-muted);
+    .summary-value {
+        font-size: 2.2rem;
+    }
 }
