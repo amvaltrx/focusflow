@@ -358,7 +358,8 @@ const TasksPage = () => {
   const missedTasks = filteredAndSortedTasks.filter(t => t.status === 'missed');
 
   return (
-    <div className="tasks-page animate-fade-in">
+    <div className={`tasks-page animate-fade-in ${isModalOpen ? 'modal-active' : ''}`}>
+
       <div className="tasks-header">
         <h2>Your Tasks</h2>
         <div className="tasks-actions-main">
