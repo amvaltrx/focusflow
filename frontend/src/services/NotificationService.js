@@ -13,29 +13,12 @@ class NotificationService {
     }
 
     async registerServiceWorkerAndSubscribe(api) {
+        console.log("Service Worker disabled for mobile app stability.");
+        return;
+        /*
         if (!('serviceWorker' in navigator)) return;
-
-        try {
-            const register = await navigator.serviceWorker.register('/sw.js', {
-                scope: '/'
-            });
-
-            const subscription = await register.pushManager.subscribe({
-                userVisibleOnly: true,
-                applicationServerKey: this.urlBase64ToUint8Array(PUBLIC_VAPID_KEY)
-            });
-
-            await api.post('/notifications/subscribe', subscription);
-            
-            // Send immediate confirmation through the worker
-            await register.showNotification("FocusFlow Active! 🎯", {
-                body: "Success! You are now connected for mobile reminders.",
-                icon: '/icon.png',
-                vibrate: [200, 100, 200]
-            });
-        } catch (err) {
-            console.error("Service Worker / Push subscription failed:", err);
-        }
+        // ... rest of the code
+        */
     }
 
     urlBase64ToUint8Array(base64String) {

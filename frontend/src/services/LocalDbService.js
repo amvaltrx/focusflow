@@ -1,19 +1,31 @@
-import localforage from 'localforage';
+// Simplified LocalDbService using localStorage for maximum Android compatibility
+// This avoids all background worker and MessagePort issues.
 
-const db = {
-    tasks: localforage.createInstance({ name: 'FocusFlow', storeName: 'tasks' }),
-    goals: localforage.createInstance({ name: 'FocusFlow', storeName: 'goals' }),
-    user: localforage.createInstance({ name: 'FocusFlow', storeName: 'user' }),
-    logs: localforage.createInstance({ name: 'FocusFlow', storeName: 'logs' })
+const storage = {
+    getItem: (key) => {
+        try {
+            const item = localStorage.getItem(key);
+            return item ? JSON.parse(item) : null;
+        } catch (e) {
+            console.error('Storage Read Error', e);
+            return null;
+        }
+    },
+    setItem: (key, value) => {
+        try {
+            localStorage.setItem(key, JSON.stringify(value));
+        } catch (e) {
+            console.error('Storage Write Error', e);
+        }
+    }
 };
 
-const generateId = () => crypto.randomUUID ? crypto.randomUUID() : Math.random().toString(36).substr(2, 9);
+const generateId = () => Math.random().toString(36).substr(2, 9) + Date.now().toString(36);
 
 class LocalDbService {
     async initDefaults() {
-        const user = await db.user.getItem('profile');
-        if (!user) {
-            await db.user.setItem('profile', { 
+        if (!storage.getItem('ff_user')) {
+            storage.setItem('ff_user', { 
                 _id: 'local_user', 
                 username: 'FocusUser', 
                 points: 0, 
@@ -23,20 +35,14 @@ class LocalDbService {
                 companionExp: 0
             });
         }
-        
-        const tasks = await db.tasks.getItem('list');
-        if (!tasks) await db.tasks.setItem('list', []);
-
-        const goals = await db.goals.getItem('list');
-        if (!goals) await db.goals.setItem('list', []);
-        
-        const logs = await db.logs.getItem('list');
-        if (!logs) await db.logs.setItem('list', []);
+        if (!storage.getItem('ff_tasks')) storage.setItem('ff_tasks', []);
+        if (!storage.getItem('ff_goals')) storage.setItem('ff_goals', []);
+        if (!storage.getItem('ff_logs')) storage.setItem('ff_logs', []);
     }
 
     // --- USER / AUTH ---
     async getUser() {
-        return await db.user.getItem('profile');
+        return storage.getItem('ff_user');
     }
 
     async updateUser(updates) {
@@ -50,7 +56,7 @@ class LocalDbService {
             companionExp: 0 
         };
         const updated = { ...user, ...updates };
-        await db.user.setItem('profile', updated);
+        storage.setItem('ff_user', updated);
         return updated;
     }
 
@@ -77,7 +83,7 @@ class LocalDbService {
 
     // --- TASKS ---
     async getTasks() {
-        return await db.tasks.getItem('list');
+        return storage.getItem('ff_tasks') || [];
     }
 
     async createTask(data) {
@@ -90,7 +96,7 @@ class LocalDbService {
             actualTimeSpent: 0
         };
         tasks.push(newTask);
-        await db.tasks.setItem('list', tasks);
+        storage.setItem('ff_tasks', tasks);
         return newTask;
     }
 
@@ -99,7 +105,7 @@ class LocalDbService {
         const index = tasks.findIndex(t => t._id === id);
         if (index === -1) throw new Error('Task not found');
         tasks[index] = { ...tasks[index], ...data };
-        await db.tasks.setItem('list', tasks);
+        storage.setItem('ff_tasks', tasks);
         return tasks[index];
     }
 
@@ -130,21 +136,20 @@ class LocalDbService {
             });
         }
 
-        await db.tasks.setItem('list', tasks);
+        storage.setItem('ff_tasks', tasks);
         return task;
     }
 
     async deleteTask(id) {
         let tasks = await this.getTasks();
         tasks = tasks.filter(t => t._id !== id);
-        await db.tasks.setItem('list', tasks);
+        storage.setItem('ff_tasks', tasks);
         return { message: 'Task removed' };
     }
 
     async getSmartSchedule(clientHour) {
         const tasks = await this.getTasks();
         const pending = tasks.filter(t => t.status === 'pending');
-        // Simple mock of smart scheduling
         pending.sort((a, b) => {
             if (a.priority === 'high' && b.priority !== 'high') return -1;
             if (a.priority !== 'high' && b.priority === 'high') return 1;
@@ -197,28 +202,23 @@ class LocalDbService {
                     const nextDate = new Date(task.createdDate);
                     nextDate.setDate(nextDate.getDate() + 1);
                     task.createdDate = nextDate.toISOString();
-                    if (task.deadline) {
-                        const newDeadline = new Date(task.deadline);
-                        newDeadline.setDate(newDeadline.getDate() + 1);
-                        task.deadline = newDeadline.toISOString();
-                    }
                 }
             }
         });
-        await db.tasks.setItem('list', tasks);
+        storage.setItem('ff_tasks', tasks);
         return { message: 'Day off redeemed' };
     }
 
     // --- GOALS ---
     async getGoals() {
-        return await db.goals.getItem('list');
+        return storage.getItem('ff_goals') || [];
     }
 
     async createGoal(data) {
         const goals = await this.getGoals();
         const newGoal = { _id: generateId(), ...data, createdDate: new Date().toISOString() };
         goals.push(newGoal);
-        await db.goals.setItem('list', goals);
+        storage.setItem('ff_goals', goals);
         return newGoal;
     }
 
@@ -227,7 +227,7 @@ class LocalDbService {
         const index = goals.findIndex(g => g._id === id);
         if (index > -1) {
             goals[index] = { ...goals[index], ...data };
-            await db.goals.setItem('list', goals);
+            storage.setItem('ff_goals', goals);
             return goals[index];
         }
         throw new Error('Goal not found');
@@ -236,19 +236,19 @@ class LocalDbService {
     async deleteGoal(id) {
         let goals = await this.getGoals();
         goals = goals.filter(g => g._id !== id);
-        await db.goals.setItem('list', goals);
+        storage.setItem('ff_goals', goals);
         return { message: 'Goal removed' };
     }
 
     // --- LOGS ---
     async createLog(data) {
-        const logs = await db.logs.getItem('list');
+        const logs = storage.getItem('ff_logs') || [];
         logs.push({ _id: generateId(), ...data, date: new Date().toISOString() });
-        await db.logs.setItem('list', logs);
+        storage.setItem('ff_logs', logs);
         return { message: 'Logged' };
     }
 
-    // --- STATS (Simplified Local versions) ---
+    // --- STATS ---
     async getDashboardStats() {
         const tasks = await this.getTasks();
         const completedToday = tasks.filter(t => t.status === 'completed' && new Date(t.completedDate).toDateString() === new Date().toDateString());
@@ -256,11 +256,11 @@ class LocalDbService {
         const focusMins = completedToday.reduce((acc, t) => acc + (t.actualTimeSpent || 0), 0);
         
         return {
-            streak: 1, // Mock
+            streak: 1,
             completedTodayCount: completedToday.length,
             activeTasksCount: activeTasks.length,
             totalFocusMinutesToday: focusMins,
-            dailyPercentage: activeTasks.length === 0 ? 100 : Math.round((completedToday.length / (completedToday.length + activeTasks.length)) * 100),
+            dailyPercentage: (activeTasks.length + completedToday.length) === 0 ? 100 : Math.round((completedToday.length / (completedToday.length + activeTasks.length)) * 100),
             labels: ['M', 'T', 'W', 'T', 'F', 'S', 'S'],
             weeklyTimeData: [0, 0, 0, 0, 0, 0, focusMins]
         };
@@ -268,33 +268,12 @@ class LocalDbService {
 
     async getMonthlyStats() {
         return [
-            { month: 'Jan', completedTasks: 0, missedTasks: 0, focusHours: 0 },
-            { month: 'Feb', completedTasks: 0, missedTasks: 0, focusHours: 0 }
+            { month: 'Jan', completedTasks: 0, missedTasks: 0, focusHours: 0 }
         ];
     }
-
-    // --- BACKUP ---
-    async exportData() {
-        return JSON.stringify({
-            user: await db.user.getItem('profile'),
-            tasks: await db.tasks.getItem('list'),
-            goals: await db.goals.getItem('list'),
-            logs: await db.logs.getItem('list')
-        });
-    }
-
-    async importData(jsonString) {
-        try {
-            const data = JSON.parse(jsonString);
-            if (data.user) await db.user.setItem('profile', data.user);
-            if (data.tasks) await db.tasks.setItem('list', data.tasks);
-            if (data.goals) await db.goals.setItem('list', data.goals);
-            if (data.logs) await db.logs.setItem('list', data.logs);
-            return { message: 'Data imported successfully' };
-        } catch (e) {
-            throw new Error('Invalid backup file');
-        }
-    }
 }
+
+export default new LocalDbService();
+
 
 export default new LocalDbService();
