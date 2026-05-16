@@ -1,8 +1,9 @@
 import React, { useContext } from 'react';
 import { ThemeContext } from '../../context/ThemeContext';
 import { AuthContext } from '../../context/AuthContext';
-import { Paintbrush, LogOut, Bell, BellOff, Star } from 'lucide-react';
+import { Paintbrush, LogOut, Bell, BellOff, Star, DownloadCloud } from 'lucide-react';
 import NotificationService from '../../services/NotificationService';
+import UpdateService from '../../services/UpdateService';
 import api from '../../services/api';
 import { calculateLevel, UNLOCKABLE_THEMES } from '../../utils/leveling';
 import './Header.css';
@@ -38,6 +39,18 @@ const Header = () => {
     }
   };
 
+  const [updateAvailable, setUpdateAvailable] = React.useState(null);
+
+  React.useEffect(() => {
+    const checkUpdates = async () => {
+        const update = await UpdateService.checkForUpdates();
+        if (update.available) {
+            setUpdateAvailable(update);
+        }
+    };
+    checkUpdates();
+  }, []);
+
   React.useEffect(() => {
       if (notificationsEnabled && user) {
           NotificationService.startReminders(api);
@@ -54,6 +67,18 @@ const Header = () => {
         <p>Let's maximize your productivity today.</p>
       </div>
       <div className="header-actions">
+        {updateAvailable && (
+          <a 
+            href={updateAvailable.downloadUrl} 
+            target="_blank" 
+            rel="noopener noreferrer"
+            className="update-badge animate-pulse"
+            title={`New Version ${updateAvailable.newVersion} available!`}
+          >
+            <DownloadCloud size={16} />
+            <span>Update Available</span>
+          </a>
+        )}
         <div className="points-badge" title="Earn points by completing tasks!">
             <Star size={18} className="text-warning" fill="currentColor" />
             <span>{user?.points || 0} Pts</span>
