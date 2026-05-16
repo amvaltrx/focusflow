@@ -369,11 +369,8 @@
 
 
 @media (max-width: 800px) {
-  .tasks-page {
-    transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), filter 0.4s ease;
-  }
-
   .tasks-lists {
+
 
     display: flex !important;
     flex-direction: column !important;
