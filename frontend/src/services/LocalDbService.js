@@ -40,7 +40,15 @@ class LocalDbService {
     }
 
     async updateUser(updates) {
-        const user = await this.getUser();
+        const user = await this.getUser() || { 
+            _id: 'local_user', 
+            username: 'FocusUser', 
+            points: 0, 
+            totalXp: 0,
+            companionLevel: 1,
+            companionHealth: 100,
+            companionExp: 0 
+        };
         const updated = { ...user, ...updates };
         await db.user.setItem('profile', updated);
         return updated;
