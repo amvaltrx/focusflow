@@ -1,5 +1,7 @@
-const CURRENT_VERSION = '1.2.1';
+import packageInfo from '../../package.json';
+const CURRENT_VERSION = packageInfo.version;
 const GITHUB_REPO = 'amvaltrx/focusflow';
+
 
 class UpdateService {
     async checkForUpdates() {
