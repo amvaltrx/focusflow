@@ -11,43 +11,48 @@ import TasksPage from './pages/TasksPage.jsx';
 import GoalsPage from './pages/GoalsPage.jsx';
 import StatsPage from './pages/StatsPage.jsx';
 
-const PrivateRoute = ({ children }) => {
+const PrivateLayout = ({ children }) => {
   const { user, loading } = useContext(AuthContext);
-  if (loading) return <div>Loading...</div>;
-  if (!user) return <Navigate to="/login" />;
-  return children;
-};
-
-const AppLayout = ({ children }) => (
-  <>
-    <Sidebar />
-    <div className="main-content">
-      <Header />
-      <div style={{ marginTop: '2rem' }}>
-        {children}
+  
+  if (loading) {
+    return (
+      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh', background: '#020617', color: 'white', fontFamily: 'sans-serif' }}>
+        Loading...
       </div>
+    );
+  }
+  
+  if (!user) {
+    return <Navigate to="/login" replace />;
+  }
+  
+  return (
+    <div className="app-container">
+      <Sidebar />
+      <div className="main-content">
+        <Header />
+        <div style={{ marginTop: '2rem' }}>
+          {children}
+        </div>
+      </div>
+      <BottomNav />
     </div>
-  </>
-);
+  );
+};
 
 function App() {
   return (
     <ThemeProvider>
       <AuthProvider>
         <Router>
-          <div className="app-container">
-            <AppLayout>
-              <Routes>
-                <Route path="/login" element={<AuthPage />} />
-                <Route path="/" element={<PrivateRoute><DashboardPage /></PrivateRoute>} />
-                <Route path="/tasks" element={<PrivateRoute><TasksPage /></PrivateRoute>} />
-                <Route path="/goals" element={<PrivateRoute><GoalsPage /></PrivateRoute>} />
-                <Route path="/stats" element={<PrivateRoute><StatsPage /></PrivateRoute>} />
-                <Route path="*" element={<Navigate to="/" />} />
-              </Routes>
-            </AppLayout>
-            <BottomNav />
-          </div>
+          <Routes>
+            <Route path="/login" element={<AuthPage />} />
+            <Route path="/" element={<PrivateLayout><DashboardPage /></PrivateLayout>} />
+            <Route path="/tasks" element={<PrivateLayout><TasksPage /></PrivateLayout>} />
+            <Route path="/goals" element={<PrivateLayout><GoalsPage /></PrivateLayout>} />
+            <Route path="/stats" element={<PrivateLayout><StatsPage /></PrivateLayout>} />
+            <Route path="*" element={<Navigate to="/" replace />} />
+          </Routes>
         </Router>
       </AuthProvider>
     </ThemeProvider>

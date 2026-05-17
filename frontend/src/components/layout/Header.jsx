@@ -13,7 +13,7 @@ const Header = () => {
   const { theme, changeTheme } = useContext(ThemeContext);
   const { user, logout } = useContext(AuthContext);
   const [notificationsEnabled, setNotificationsEnabled] = React.useState(
-    typeof Notification !== 'undefined' && Notification.permission === 'granted'
+    localStorage.getItem('notifications_enabled') === 'true'
   );
 
   const { level } = calculateLevel(user?.totalXp || 0);
@@ -29,6 +29,7 @@ const Header = () => {
     if (notificationsEnabled) {
         // TURN OFF
         NotificationService.stopReminders();
+        localStorage.setItem('notifications_enabled', 'false');
         setNotificationsEnabled(false);
     } else {
         // TURN ON
@@ -37,6 +38,7 @@ const Header = () => {
             await NotificationService.registerServiceWorkerAndSubscribe(api);
             NotificationService.sendNotification("FocusFlow Active! 🎯", "Success! You are now connected for mobile reminders.");
             NotificationService.startReminders(api);
+            localStorage.setItem('notifications_enabled', 'true');
             setNotificationsEnabled(true);
         }
     }

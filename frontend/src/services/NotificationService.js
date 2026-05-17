@@ -1,4 +1,4 @@
-const PUBLIC_VAPID_KEY = 'BER7NJE-OS3jqXP5Qe70nQxAi-yd0jd92Zq4NN1ATLiHa7K6zpCuelk_EZYkEPCsC9Y61J6JL2Fyh_QXMKaOAQ4';
+import { LocalNotifications } from '@capacitor/local-notifications';
 
 class NotificationService {
     constructor() {
@@ -6,6 +6,20 @@ class NotificationService {
     }
 
     async requestPermission() {
+        if (window.Capacitor) {
+            try {
+                const perm = await LocalNotifications.checkPermissions();
+                if (perm.display !== 'granted') {
+                    const req = await LocalNotifications.requestPermissions();
+                    return req.display === 'granted';
+                }
+                return true;
+            } catch (err) {
+                console.error("Failed to request native notification permissions:", err);
+                return false;
+            }
+        }
+        
         if (!('Notification' in window)) return false;
         if (Notification.permission === 'granted') return true;
         const permission = await Notification.requestPermission();
@@ -13,28 +27,35 @@ class NotificationService {
     }
 
     async registerServiceWorkerAndSubscribe(api) {
-        console.log("Service Worker disabled for mobile app stability.");
+        // Disabling push notifications since local notifications are completely active and native
+        console.log("Local native notifications active. Subscriptions bypassed.");
         return;
-        /*
-        if (!('serviceWorker' in navigator)) return;
-        // ... rest of the code
-        */
     }
 
-    urlBase64ToUint8Array(base64String) {
-        const padding = '='.repeat((4 - base64String.length % 4) % 4);
-        const base64 = (base64String + padding).replace(/-/g, '+').replace(/_/g, '/');
-        const rawData = window.atob(base64);
-        const outputArray = new Uint8Array(rawData.length);
-        for (let i = 0; i < rawData.length; ++i) {
-            outputArray[i] = rawData.charCodeAt(i);
+    async sendNotification(title, body) {
+        if (window.Capacitor) {
+            try {
+                const isGranted = await this.requestPermission();
+                if (isGranted) {
+                    await LocalNotifications.schedule({
+                        notifications: [
+                            {
+                                title: title,
+                                body: body,
+                                id: Math.floor(Math.random() * 100000),
+                                schedule: { at: new Date(Date.now() + 500) } // Deliver instantly in 0.5s
+                            }
+                        ]
+                    });
+                }
+            } catch (err) {
+                console.error("Failed to trigger native local notification:", err);
+            }
+            return;
         }
-        return outputArray;
-    }
 
-    sendNotification(title, body) {
         if (Notification.permission === 'granted') {
-            new Notification(title, { body, icon: '/icon.png' });
+            new Notification(title, { body, icon: '/favicon.svg' });
         }
     }
 
