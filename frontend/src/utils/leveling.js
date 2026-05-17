@@ -32,6 +32,9 @@ export const calculateLevel = (totalXp = 0) => {
 export const UNLOCKABLE_THEMES = [
     { id: 'red-black', name: 'Crimson Flow', reqLevel: 1 },
     { id: 'purple-black', name: 'Deep Focus', reqLevel: 1 },
+    { id: 'emerald-flow', name: 'Emerald Aurora', reqLevel: 1 },
+    { id: 'sunset-flow', name: 'Sunset Horizon', reqLevel: 1 },
+    { id: 'nordic-frost', name: 'Nordic Frost', reqLevel: 1 },
     { id: 'light', name: 'Daylight', reqLevel: 1 },
     { id: 'lite', name: 'Minimal', reqLevel: 1 },
     { id: 'gold-black', name: 'Golden Master', reqLevel: 10 },
