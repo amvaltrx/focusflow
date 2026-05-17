@@ -6,6 +6,7 @@ import NotificationService from '../../services/NotificationService';
 import UpdateService from '../../services/UpdateService';
 import api from '../../services/api';
 import { calculateLevel, UNLOCKABLE_THEMES } from '../../utils/leveling';
+import packageInfo from '../../../package.json';
 import './Header.css';
 
 const Header = () => {
@@ -129,7 +130,12 @@ const Header = () => {
   return (
     <header className="header glass-panel">
       <div className="header-greeting">
-        <h3>Hello, {user?.username || 'User'}! 👋</h3>
+        <h3>
+          Hello, {user?.username || 'User'}! 👋 
+          <span style={{ fontSize: '11px', opacity: 0.6, padding: '2px 6px', background: 'rgba(255,255,255,0.1)', borderRadius: '4px', marginLeft: '8px', verticalAlign: 'middle', fontWeight: 'normal' }}>
+            v{packageInfo.version}
+          </span>
+        </h3>
         <p>Let's maximize your productivity today.</p>
       </div>
       <div className="header-actions">
