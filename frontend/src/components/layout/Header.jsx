@@ -62,9 +62,56 @@ const Header = () => {
       return () => NotificationService.stopReminders();
   }, [notificationsEnabled, user]);
 
-  const handleUpdateClick = (e) => {
+  const [isDownloading, setIsDownloading] = React.useState(false);
+  const [downloadProgress, setDownloadProgress] = React.useState(0);
+
+  const handleUpdateClick = async (e) => {
     e.preventDefault();
-    if (updateAvailable) {
+    if (!updateAvailable || isDownloading) return;
+
+    setIsDownloading(true);
+    setDownloadProgress(0);
+
+    try {
+      const response = await fetch(updateAvailable.downloadUrl);
+      if (!response.ok) throw new Error("Network response was not ok");
+
+      const reader = response.body.getReader();
+      const contentLength = +(response.headers.get('Content-Length') || 11076291); // Fallback to compiled APK size if header missing
+
+      let receivedLength = 0;
+      let chunks = [];
+
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+
+        chunks.push(value);
+        receivedLength += value.length;
+
+        const percent = Math.round((receivedLength / contentLength) * 100);
+        setDownloadProgress(percent > 100 ? 100 : percent);
+      }
+
+      const blob = new Blob(chunks, { type: 'application/vnd.android.package-archive' });
+      const blobUrl = window.URL.createObjectURL(blob);
+
+      const link = document.createElement('a');
+      link.href = blobUrl;
+      link.download = `focusflow-v${updateAvailable.newVersion}.apk`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+
+      setIsDownloading(false);
+      setDownloadProgress(0);
+      alert("🎉 Update downloaded! Tap the file in your downloads folder to complete the installation.");
+    } catch (err) {
+      console.error("In-app download failed:", err);
+      setIsDownloading(false);
+      setDownloadProgress(0);
+      
+      // Graceful fallback to opening in native Chrome browser if in-app block occurs
       if (window.Capacitor) {
         window.open(updateAvailable.downloadUrl, '_system');
       } else {
@@ -80,16 +127,23 @@ const Header = () => {
         <p>Let's maximize your productivity today.</p>
       </div>
       <div className="header-actions">
-        {updateAvailable && (
-          <button 
-            onClick={handleUpdateClick}
-            className="update-badge animate-pulse"
-            style={{ border: 'none', cursor: 'pointer' }}
-            title={`New Version ${updateAvailable.newVersion} available!`}
-          >
-            <DownloadCloud size={16} />
-            <span>Update Available</span>
-          </button>
+        {isDownloading ? (
+          <div className="update-progress-container">
+            <div className="update-progress-bar" style={{ width: `${downloadProgress}%` }}></div>
+            <span>Downloading {downloadProgress}%</span>
+          </div>
+        ) : (
+          updateAvailable && (
+            <button 
+              onClick={handleUpdateClick}
+              className="update-badge animate-pulse"
+              style={{ border: 'none', cursor: 'pointer' }}
+              title={`New Version ${updateAvailable.newVersion} available!`}
+            >
+              <DownloadCloud size={16} />
+              <span>Update Available</span>
+            </button>
+          )
         )}
         <div className="points-badge" title="Earn points by completing tasks!">
             <Star size={18} className="text-warning" fill="currentColor" />
