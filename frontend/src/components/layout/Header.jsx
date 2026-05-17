@@ -105,7 +105,13 @@ const Header = () => {
 
       setIsDownloading(false);
       setDownloadProgress(0);
-      alert("🎉 Update downloaded! Tap the file in your downloads folder to complete the installation.");
+
+      // Auto-trigger system Chrome installer to immediately show the "Open / Install" pop up!
+      if (window.Capacitor) {
+        window.open(updateAvailable.downloadUrl, '_system');
+      } else {
+        window.location.href = updateAvailable.downloadUrl;
+      }
     } catch (err) {
       console.error("In-app download failed:", err);
       setIsDownloading(false);
