@@ -15,7 +15,7 @@ class UpdateService {
                 return {
                     available: true,
                     newVersion: data.version,
-                    downloadUrl: `https://github.com/${GITHUB_REPO}/actions`
+                    downloadUrl: `https://amvaltrx.github.io/focusflow/focusflow.apk`
                 };
             }
         } catch (e) {
