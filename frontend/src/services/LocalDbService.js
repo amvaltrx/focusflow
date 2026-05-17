@@ -150,27 +150,37 @@ class LocalDbService {
     async getSmartSchedule(clientHour) {
         const tasks = await this.getTasks();
         const pending = tasks.filter(t => t.status === 'pending');
-        pending.sort((a, b) => {
-            if (a.priority === 'high' && b.priority !== 'high') return -1;
-            if (a.priority !== 'high' && b.priority === 'high') return 1;
-            return 0;
-        });
-
-        const hour = parseInt(clientHour) || new Date().getHours();
-        let currentHour = hour;
         
-        const scheduled = pending.map(task => {
-            const timeSlot = `${String(currentHour).padStart(2, '0')}:00 - ${String(currentHour + 1).padStart(2, '0')}:00`;
-            currentHour++;
-            if (currentHour > 23) currentHour = 8;
+        // Sort priority high -> medium -> low
+        const priorityOrder = { high: 0, medium: 1, low: 2 };
+        pending.sort((a, b) => (priorityOrder[a.priority] || 1) - (priorityOrder[b.priority] || 1));
+
+        const baseHour = parseInt(clientHour) || new Date().getHours();
+        
+        const suggested = pending.map((task, index) => {
+            const scheduledHour = (baseHour + index) % 24;
+            
+            // Assign smart energy types based on hour of the day and priority
+            let hourType = 'normal';
+            let recommendation = '⚡ Stable Focus Energy';
+            
+            if (task.priority === 'high') {
+                hourType = 'peak';
+                recommendation = '🚀 Peak Focus Window';
+            } else if (scheduledHour >= 13 && scheduledHour <= 15) {
+                hourType = 'low';
+                recommendation = '💤 Energy Slump (Low Focus)';
+            }
+            
             return {
                 task,
-                timeSlot,
-                reason: `Optimized for ${task.priority} priority`
+                scheduledHour,
+                hourType,
+                recommendation
             };
         });
 
-        return { scheduledTasks: scheduled };
+        return { suggestedSchedule: suggested };
     }
 
     async redeemDayOff() {
