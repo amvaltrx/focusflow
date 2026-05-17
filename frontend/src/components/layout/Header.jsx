@@ -62,6 +62,17 @@ const Header = () => {
       return () => NotificationService.stopReminders();
   }, [notificationsEnabled, user]);
 
+  const handleUpdateClick = (e) => {
+    e.preventDefault();
+    if (updateAvailable) {
+      if (window.Capacitor) {
+        window.open(updateAvailable.downloadUrl, '_system');
+      } else {
+        window.location.href = updateAvailable.downloadUrl;
+      }
+    }
+  };
+
   return (
     <header className="header glass-panel">
       <div className="header-greeting">
@@ -70,16 +81,15 @@ const Header = () => {
       </div>
       <div className="header-actions">
         {updateAvailable && (
-          <a 
-            href={updateAvailable.downloadUrl} 
-            target="_blank" 
-            rel="noopener noreferrer"
+          <button 
+            onClick={handleUpdateClick}
             className="update-badge animate-pulse"
+            style={{ border: 'none', cursor: 'pointer' }}
             title={`New Version ${updateAvailable.newVersion} available!`}
           >
             <DownloadCloud size={16} />
             <span>Update Available</span>
-          </a>
+          </button>
         )}
         <div className="points-badge" title="Earn points by completing tasks!">
             <Star size={18} className="text-warning" fill="currentColor" />
