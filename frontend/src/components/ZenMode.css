@@ -50,7 +50,7 @@
     align-items: center;
     gap: 0.5rem;
     cursor: pointer;
-    backdrop-filter: blur(10px);
+    backdrop-filter: blur(4px);
     transition: all 0.3s;
     font-size: 1rem;
     font-weight: 500;

@@ -20,7 +20,7 @@
   transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), filter 0.4s ease, opacity 0.4s ease;
 }
 
-/* Global Sinking Effect - Selective Blurring */
+/* Global Sinking Effect - High Performance Selective Dimming */
 body.modal-open .tasks-header,
 body.modal-open .filter-bar,
 body.modal-open .tasks-lists,
@@ -37,10 +37,11 @@ body.modal-open .wellness-section,
 body.modal-open .procrastination-insights,
 body.modal-open .header,
 body.modal-open .bottom-nav {
-  transform: scale(0.92) translateY(-10px);
-  filter: blur(8px) brightness(0.6);
+  transform: scale(0.96) translateY(-5px);
+  opacity: 0.35;
   pointer-events: none;
   user-select: none;
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease;
 }
 
 
@@ -49,8 +50,8 @@ body.modal-open .bottom-nav {
 /* Glassmorphism Classes */
 .glass-panel {
   background: var(--glass-bg);
-  backdrop-filter: blur(24px) saturate(180%);
-  -webkit-backdrop-filter: blur(24px) saturate(180%);
+  backdrop-filter: blur(6px) saturate(140%);
+  -webkit-backdrop-filter: blur(6px) saturate(140%);
   border: 1px solid var(--glass-border);
   box-shadow: var(--glass-shadow);
   border-radius: var(--border-radius-lg);
@@ -60,13 +61,13 @@ body.modal-open .bottom-nav {
 .modal-overlay {
   position: fixed;
   inset: 0;
-  background: rgba(2, 6, 23, 0.85);
+  background: rgba(2, 6, 23, 0.9);
   display: flex;
   align-items: center;
   justify-content: center;
   z-index: 10000;
-  backdrop-filter: blur(12px) saturate(180%);
-  -webkit-backdrop-filter: blur(12px) saturate(180%);
+  backdrop-filter: blur(3px) saturate(140%);
+  -webkit-backdrop-filter: blur(3px) saturate(140%);
   padding: 1.5rem;
   transition: all 0.3s ease;
 }
