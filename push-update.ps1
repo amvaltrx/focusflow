@@ -82,6 +82,20 @@ git add .
 git commit -m "chore: release version v$newVersion"
 git push
 
+# 10. Automatically deploy to connected phone via ADB (if connected)
+$adbPath = "C:\Users\pushk\AppData\Local\Android\Sdk\platform-tools\adb.exe"
+if (Test-Path $adbPath) {
+    Write-Host "📲 Checking for connected USB/Wi-Fi developer devices..." -ForegroundColor Cyan
+    $devices = & $adbPath devices | Out-String
+    if ($devices -match "\tdevice") {
+        Write-Host "⚡ Connected device found! Deploying fresh APK to phone..." -ForegroundColor Yellow
+        & $adbPath install -r $apkSource
+        Write-Host "🚀 Installed version v$newVersion on your connected phone successfully!" -ForegroundColor Green
+    } else {
+        Write-Host "💡 Note: No connected developer devices found. Skipping ADB local deploy." -ForegroundColor Gray
+    }
+}
+
 Write-Host "==========================================" -ForegroundColor Green
 Write-Host "🎉 FOCUSFLOW v$newVersion IS LIVE!" -ForegroundColor Green
 Write-Host "==========================================" -ForegroundColor Green
